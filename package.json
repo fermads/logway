@@ -1,0 +1,18 @@
+{
+  "name": "logui",
+  "version": "0.0.1",
+  "description": "Client and server application for sending metrics and logs from the client (browser) to the server (Graphite / Logstash)",
+  "main": "index.js",
+  "bin": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start4": "node4 --use_strict .",
+    "start": "node --use_strict ."
+  },
+  "keywords": [
+    "graphite",
+    "logstash",
+    "client",
+    "server"
+  ]
+}

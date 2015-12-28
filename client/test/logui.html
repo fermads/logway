@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+
+<script src="../src/logui.core.js"
+  data-logui-debug="true"
+  data-logui-prefix="scoreboard.client"
+  data-logui-host="127.0.0.1"></script>
+<script>
+/* global Logui */
+  Logui.add('bla.ble.bli', 2);
+  Logui.add('bla.ble.bli', 4);
+  Logui.put('bla.ble.leel', 4);
+  Logui.put('bla.ble.teste', 6);
+  Logui.stats('ble.bli.test', 8);
+
+setTimeout(function() {
+  for(var i = 0; i<100;i++) {
+    Logui.add('lalala.lele', 3);
+  }
+}, 2000);
+
+setTimeout(function() {
+  for(var i = 0; i<100;i++) {
+    Logui.put('lalala.lele', 3);
+  }
+}, 4000);
+
+/*var t = performance.timing;
+var perfs = {
+  'redirect': t.redirectEnd - t.redirectStart,
+  'fetch from cache': t.domainLookupStart - t.fetchStart,
+  'domain lookup': t.domainLookupEnd - t.domainLookupStart,
+  'connection': t.connectEnd - t.connectStart,
+  'request': t.responseStart - t.requestStart,
+  'response': t.responseEnd - t.responseStart,
+  'domInteractive': t.domInteractive - t.domLoading,
+  'domContentLoaded': t.domContentLoadedEventEnd - t.domContentLoadedEventStart,
+  'domComplete': t.domComplete - t.domLoading,
+  'load complete': t.loadEventEnd - t.loadEventStart,
+  'all network latency': t.responseEnd - t.fetchStart,
+  'page parse': t.loadEventEnd - t.responseEnd,
+  'page full load': t.loadEventEnd - t.navigationStart,
+  'js heap size': performance.memory.usedJSHeapSize
+}
+
+for(var item in perfs) {
+  console.log(item +'='+ perfs[item])
+}*/
+
+</script>
+</body>
+</html>
