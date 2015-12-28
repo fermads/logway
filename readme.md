@@ -7,6 +7,6 @@ Can be used for getting performance.timing information (HTML5 page
 performance API), A/B testing or just to store client logs/erros on the server.
 
 ## Doc
-* [Server](/projects/LOGUI/repos/logui/browse/server)
-* [Client](/projects/LOGUI/repos/logui/browse/client)
+* [Server](tree/master/server)
+* [Client](tree/master/client)
 
