@@ -4,24 +4,26 @@
   var t = w.performance.timing;
   var perfs = {
     'redirect': t.redirectEnd - t.redirectStart,
-    'fetch from cache': t.domainLookupStart - t.fetchStart,
-    'domain lookup': t.domainLookupEnd - t.domainLookupStart,
+    'fetchfromcache': t.domainLookupStart - t.fetchStart,
+    'domainlookup': t.domainLookupEnd - t.domainLookupStart,
     'connection': t.connectEnd - t.connectStart,
     'request': t.responseStart - t.requestStart,
     'response': t.responseEnd - t.responseStart,
-    'domInteractive': t.domInteractive - t.domLoading,
-    'domContentLoaded': t.domContentLoadedEventEnd - t.domContentLoadedEventStart,
-    'domComplete': t.domComplete - t.domLoading,
-    'load complete': t.loadEventEnd - t.loadEventStart,
-    'all network latency': t.responseEnd - t.fetchStart,
-    'page parse': t.loadEventEnd - t.responseEnd,
-    'page full load': t.loadEventEnd - t.navigationStart,
-    'js heap size': w.performance.memory.usedJSHeapSize
+    'dominteractive': t.domInteractive - t.domLoading,
+    'domcontentloaded': t.domContentLoadedEventEnd - t.domContentLoadedEventStart,
+    'domcomplete': t.domComplete - t.domLoading,
+    'loadcomplete': t.loadEventEnd - t.loadEventStart,
+    'networklatency': t.responseEnd - t.fetchStart,
+    'pageparse': t.loadEventEnd - t.responseEnd,
+    'pagefullload': t.loadEventEnd - t.navigationStart,
+    'jsheapsize': w.performance.memory.usedJSHeapSize
   };
 
   init();
 
   function init() {
+    if(!t) return;
+
     d.addEventListener('load', function() {
       sendPerfInfo();
     });
@@ -48,7 +50,7 @@
     info = info.replace(/\./g, '_').replace(' ', '.');
 
     for(var item in perfs) {
-      w[globvar].stats('performance.'+ info +'.'+ item, perfs[item]);
+      w[globvar].stats('performance.'+ item +'.'+ info, perfs[item]);
       // console.log(item +'='+ perfs[item]);
     }
   }
