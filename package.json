@@ -1,5 +1,5 @@
 {
-  "name": "logui",
+  "name": "ferlog",
   "version": "0.0.1",
   "description": "Client and server application for sending metrics and logs from the client (browser) to the server (Graphite / Logstash)",
   "main": "index.js",

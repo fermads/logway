@@ -1,4 +1,4 @@
-# Log UI
+# ferlog - Front End Remote Logging
 
 Client and server application for sending metrics and logs from the
 client (browser) to the server (Graphite / Logstash).

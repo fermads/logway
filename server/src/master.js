@@ -1,17 +1,23 @@
-let os = require('os')
 let cluster = require('cluster')
 let Worker = require('./worker')
 let Logger = require('../lib/logger')
+let Graphite = require('./graphite')
 let config = require('./config')
-let log, cpus
+
+let log, graphite
 
 class Master {
 
   constructor() {
-    log = new Logger('master', config.logger)
-    cpus = os.cpus().length
-    this.start()
-    this.bind()
+    if (cluster.isMaster) {
+      log = new Logger('master', config.logger)
+      graphite = new Graphite()
+      this.bind()
+      this.start()
+    }
+    else {
+      new Worker()
+    }
   }
 
   bind() {
@@ -20,21 +26,23 @@ class Master {
         + ') died with code ' + code)
 
       log.info('Restarting worker '+ worker.id +'...')
-      cluster.fork({ id: worker.id })
+      // cluster.fork({ id: worker.id })
+      this.fork(worker.id)
     });
   }
 
   start() {
-    if (cluster.isMaster)
-      this.fork()
-    else
-      new Worker()
+    for (let i = 0; i < config.master.workers; i++) {
+      this.fork(i+1)
+    }
   }
 
-  fork() {
-    for (let i = 0; i < config.master.workers; i++) {
-      cluster.fork({ id: i+1 });
-    }
+  fork(id) {
+    let worker = cluster.fork({ id: id })
+
+    worker.on('message', message => {
+      graphite.add(message)
+    })
   }
 }
 

@@ -48,11 +48,11 @@ class Server {
     else if(path == '/weblog')
       this.weblog(req, res)
     else if(path == '/health-check')
-      this.check(res)
+      this.ok(res)
     else if(path == '/sender')
       this.file(res, 'sender.html', 'text/html')
-    else if(path == '/logui')
-      this.file(res, 'logui.js', 'text/javascript')
+    else if(path == '/ferlog')
+      this.file(res, 'ferlog.js', 'text/javascript')
     else
       this.error(res, path)
   }
@@ -72,14 +72,14 @@ class Server {
     this.response(req, content => {
       metric.write(content)
     })
-    this.check(res)
+    this.ok(res)
   }
 
   weblog(req, res) {
     this.response(req, content => {
       weblog.write(content)
     })
-    this.check(res)
+    this.ok(res)
   }
 
   error(res, path) {
@@ -88,7 +88,7 @@ class Server {
     log.debug('404 not found: '+ path)
   }
 
-  check(res) {
+  ok(res) {
     res.writeHead(200)
     res.end('OK')
   }

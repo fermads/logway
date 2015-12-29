@@ -6,27 +6,27 @@
 <body>
 
 
-<script src="../src/logui.core.js"
-  data-logui-debug="true"
-  data-logui-prefix="scoreboard.client"
-  data-logui-host="127.0.0.1"></script>
+<script src="../src/ferlog.core.js"
+  data-ferlog-debug="true"
+  data-ferlog-prefix="scoreboard.client"
+  data-ferlog-host="127.0.0.1"></script>
 <script>
-/* global Logui */
-  Logui.add('bla.ble.bli', 2);
-  Logui.add('bla.ble.bli', 4);
-  Logui.put('bla.ble.leel', 4);
-  Logui.put('bla.ble.teste', 6);
-  Logui.stats('ble.bli.test', 8);
+/* global Ferlog */
+  Ferlog.add('bla.ble.bli', 2);
+  Ferlog.add('bla.ble.bli', 4);
+  Ferlog.put('bla.ble.leel', 4);
+  Ferlog.put('bla.ble.teste', 6);
+  Ferlog.stats('ble.bli.test', 8);
 
 setTimeout(function() {
   for(var i = 0; i<100;i++) {
-    Logui.add('lalala.lele', 3);
+    Ferlog.add('lalala.lele', 3);
   }
 }, 2000);
 
 setTimeout(function() {
   for(var i = 0; i<100;i++) {
-    Logui.put('lalala.lele', 3);
+    Ferlog.put('lalala.lele', 3);
   }
 }, 4000);
 

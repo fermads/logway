@@ -64,7 +64,7 @@ class Statistics {
     return r
   }
 }
-
+/*
 var stats = new Statistics()
 
 var values = []
@@ -80,4 +80,6 @@ for(var n = 0; n<1000; n++ ) {
 console.log(Date.now() - ini);
 
 console.log(x);
+*/
 
+module.exports = Statistics

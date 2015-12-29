@@ -5,9 +5,9 @@
   var storage = {};
   var delay = opt('delay', 1000);
   var prefix = opt('prefix', '');
-  var host = opt('host', 'http://logui.uol.com.br/metric');
+  var host = opt('host', 'http://ferlog.uol.com.br/metric');
   var debug = opt('debug', false);
-  var globvar = opt('global', 'Logui');
+  var globvar = opt('global', 'Ferlog');
   var timeout = opt('timeout', 500);
 
   init();
@@ -27,8 +27,8 @@
   }
 
   function opt(prop, defaultValue) {
-    var sel = d.querySelector('[data-logui-'+ prop +']');
-    return sel ? sel.getAttribute('data-logui-'+ prop) : defaultValue;
+    var sel = d.querySelector('[data-ferlog-'+ prop +']');
+    return sel ? sel.getAttribute('data-ferlog-'+ prop) : defaultValue;
   }
 
   function put(fqn, value) {
