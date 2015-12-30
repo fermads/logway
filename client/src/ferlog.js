@@ -9,6 +9,7 @@
   var debug = opt('debug', false);
   var globvar = opt('global', 'Fer');
   var timeout = opt('timeout', 500);
+  var regex = /^[a-z0-9_.]+$/;
 
   init();
 
@@ -31,24 +32,31 @@
     return sel ? sel.getAttribute('data-ferlog-'+ prop) : defaultValue;
   }
 
-  function put(fqn, value) {
-    store(fqn, value, 'p');
-  }
-
-  function add(fqn, value) {
-    store(fqn, value, 'a');
+  function count(fqn, value, reset) {
+    store(fqn, value, 'c', reset);
   }
 
   function stats(fqn, value) {
     store(fqn, value, 's');
   }
 
-  function store(fqn, value, type) {
-    if(!fqn || value === undefined || value === 0)
+  function validate(fqn, value, type) {
+    if(typeof value == 'number'
+        && ((value !== 0 && type == 'c') || type == 's')
+        && regex.test(fqn))
+      return true;
+
+    log('Invalid metric '+ fqn +' '+ value);
+    return false;
+  }
+
+  function store(fqn, value, type, reset) {
+    if(!validate(fqn, value, type))
       return;
 
-    if(storage[fqn] && type == 'a')
+    if(storage[fqn] && type == 'c' && !reset) {
       storage[fqn].value += value;
+    }
     else {
       storage[fqn] = {
         value: value,
@@ -93,13 +101,12 @@
 
     var metrics = flush();
     req.send(metrics);
-    log('Sending...\n\t'+ metrics.replace(/\n[^$]/g, '\n\t'));
+    log('Sending...\n\t'+ metrics.replace(/\n$/, '').replace(/\n/g, '\n\t'));
 
     tid = 0;
   }
 
-  w[globvar].put = put;
-  w[globvar].add = add;
+  w[globvar].count = count;
   w[globvar].stats = stats;
 
 })(window, document);

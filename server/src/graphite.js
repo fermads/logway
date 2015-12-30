@@ -77,33 +77,25 @@ class Graphite {
     }
   }
 
-  validate(fqn, value) {
-    if(value !== ''
-        && !isNaN(value)
-        && fqn.indexOf('.client.') > -1
-        && /^[a-z0-9_.]+$/.test(value))
-      return true
-
-    log.warn('Skipping metric '+ fqn +' '+ value)
-    return false
-  }
-
   add(metrics) {
-    console.log('>>>', metrics);
     for (let fqn in metrics) {
       let value = metrics[fqn]
-      let type = typeof value === 'number' ? 'a' : 's'
+      let type = typeof value == 'number' ? 'c' : 's'
 
-      if(storage[fqn] && type === 'a')
-        storage[fqn] = storage[fqn] + value
-      else if (type === 'a')
-        storage[fqn] = value
+      if (type == 'c')
+        this.count(value, fqn)
       else if (type == 's')
-        this.insert(value, fqn)
+        this.stats(value, fqn)
+      else
+        log.warn('Invalid metric type '+ type)
     }
   }
 
-  insert(arr, fqn) {
+  count(value, fqn) {
+    storage[fqn] = storage[fqn] ? (storage[fqn] + value) : value
+  }
+
+  stats(arr, fqn) {
     if(!storage[fqn])
       storage[fqn] = []
 

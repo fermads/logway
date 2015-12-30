@@ -6,6 +6,7 @@
   "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "graphite-mock": "node4 --use_strict server/test/graphite-mock.js",
     "start4": "node4 --use_strict .",
     "start": "node --use_strict ."
   },

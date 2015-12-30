@@ -49,16 +49,20 @@ class Server {
       this.weblog(req, res)
     else if(path == '/health-check')
       this.ok(res)
-    else if(path == '/sender')
-      this.file(res, 'sender.html', 'text/html')
-    else if(path == '/ferlog')
+    else if(path == '/')
+      this.file(res, 'ferlog.html', 'text/html')
+    else if(path == '/ferlog.js')
       this.file(res, 'ferlog.js', 'text/javascript')
+    else if(path == '/ferlog.perf.js')
+      this.file(res, 'ferlog.perf.js', 'text/javascript')
+    else if(path == '/ferlog.logger.js')
+      this.file(res, 'ferlog.logger.js', 'text/javascript')
     else
       this.error(res, path)
   }
 
   file(res, filename, contentType) {
-    fs.readFile(__dirname +'/../web/' + filename, 'utf8',
+    fs.readFile(__dirname +'/../../client/src/' + filename, 'utf8',
       (error, data) => {
       if (error)
         return error(res, error)

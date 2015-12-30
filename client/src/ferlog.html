@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+
+
+<script src="/ferlog.js"
+  data-ferlog-debug="true"
+  data-ferlog-prefix="scoreboard.client"
+  data-ferlog-global="Ferlog"
+  data-ferlog-host="http://localhost/metric"></script>
+<script src="/ferlog.perf.js"></script>
+<script src="/ferlog.logger.js"></script>
+<script>
+/* global Ferlog */
+
+function runTests() {
+  testAdd();
+  testPut();
+  testStats();
+  stressAdd();
+  stressPut();
+  stressStats();
+}
+
+function rand(i) {
+  i = i || 100;
+  return Math.round(Math.random() * i);
+}
+
+function testAdd() {
+  Ferlog.count('test.count', 2);
+  Ferlog.count('test.count', 4);
+}
+
+function testPut() {
+  Ferlog.count('test.countreset', 4, true);
+  Ferlog.count('test.countreset', 6, true);
+
+}
+
+function testStats() {
+  Ferlog.stats('test.stats', 10);
+  Ferlog.stats('test.stats', 20);
+}
+
+function stressAdd() {
+  setTimeout(function() {
+    for(var i = 0; i<100;i++) {
+      Ferlog.count('stress.count', rand());
+    }
+  }, 2000);
+}
+
+function stressPut() {
+  setTimeout(function() {
+    for(var i = 0; i<100;i++) {
+      Ferlog.count('stress.countreset', rand());
+    }
+  }, 4000);
+}
+
+function stressStats() {
+  setTimeout(function() {
+    for(var i = 0; i<100;i++) {
+      Ferlog.stats('stress.stats', rand());
+    }
+  }, 6000);
+}
+
+function error() {
+  console.log(bla);
+}
+
+</script>
+
+<a href="javascript:runTests()">Run some tests</a>
+<a href="javascript:error()">Force error</a>
+</body>
+</html>

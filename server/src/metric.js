@@ -1,11 +1,13 @@
 let Logger = require('../lib/logger')
 let config = require('./config')
 let util = require('./util')
-let storage = {}, log
+let storage = {}, log, regex
 
 class Metric {
   constructor() {
     log = new Logger('metric', config.logger)
+
+    regex = /^[a-z0-9_.]+$/
 
     setInterval(() => {
       this.send()
@@ -22,10 +24,9 @@ class Metric {
   }
 
   validate(fqn, value) {
-    if(value !== ''
-        && !isNaN(value)
+    if(typeof value == 'number'
         && fqn.indexOf('.client.') > -1
-        && /^[a-z0-9_.]+$/.test(value))
+        && regex.test(value))
       return true
 
     log.warn('Skipping metric '+ fqn +' '+ value)
@@ -58,15 +59,24 @@ class Metric {
 
       log.debug('Adding ('+ type +') metric: '+ fqn +' '+ value)
 
-      if(storage[fqn] && type === 'a')
-        storage[fqn] = storage[fqn] + value
-      else if (type === 'a')
-        storage[fqn] = value
-      else if(storage[fqn] && type === 's')
-        storage[fqn].push(value)
-      else if(type === 's')
-        storage[fqn] = [value]
+      if(type == 'c')
+        this.count(value, fqn)
+      else if(type == 's')
+        this.stats(value, fqn)
+      else
+        log.warn('Invalid metric type '+ type)
     }
+  }
+
+  count(value, fqn) {
+    storage[fqn] = storage[fqn] ? (storage[fqn] + value) : value
+  }
+
+  stats(value, fqn) {
+    if(storage[fqn])
+      storage[fqn].push(value)
+    else
+      storage[fqn] = [value]
   }
 
   write(content) {

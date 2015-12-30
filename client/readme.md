@@ -13,13 +13,13 @@ server (Graphite / Logstash).
   data-ferlog-host="127.0.0.1"></script>
 <script>```
 
-```Ferlog.add('bla.ble.bli', 2);
-Ferlog.put('bla.ble.leel', 4);
+```Ferlog.count('bla.ble.bli', 2);
+Ferlog.count('bla.ble.leel', 4, true);
 Ferlog.stats('ble.bli.test', 8);```
 
 ## Client API
 
-### Ferlog.add
+### Ferlog.count
 Cria nova métrica se ela não existir ou adiciona (soma) o valor a métrica se
 ela já existir no intervalo `flushInterval`
 
@@ -27,16 +27,6 @@ Exemplo: ao enviar a métrica
 `teste.client.testeab.iniciou 1`
 10 vezes em um intervalo menor que `flushInterval`, o valor enviado será 10
 `teste.client.testeab.iniciou 10`
-
-
-### Ferlog.put
-Cria nova métrica se ela não existir ou substitui o valor da métrica caso
-ela já existir no intervalo `flushInterval`
-
-Exemplo: ao enviar a métrica
-`teste.client.testeab.iniciou 1`
-10 vezes em um intervalo menor que `flushInterval`, o valor enviado será 1
-`teste.client.testeab.iniciou 1`
 
 
 ### Ferlog.stats
