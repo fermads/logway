@@ -26,7 +26,6 @@ class Master {
         + ') died with code ' + code)
 
       log.info('Restarting worker '+ worker.id +'...')
-      // cluster.fork({ id: worker.id })
       this.fork(worker.id)
     });
   }

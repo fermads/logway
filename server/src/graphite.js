@@ -5,7 +5,7 @@ let Stats = require('../lib/statistics')
 let config = require('./config')
 let util = require('./util')
 
-let storage = {}, socket, log, hp, options, stats
+let storage = {}, socket, log, hp, options, stats, sending = false
 
 class Graphite {
   constructor() {
@@ -53,8 +53,15 @@ class Graphite {
     var output = ''
     var mts = (now.getTime() / 1000 | 0)
 
+    if(sending === true) {
+      storage = {}
+      return log.error('Skipping this batch!')
+    }
+
     if(Object.keys(storage).length === 0)
       return
+
+    sending = true
 
     for (var metric in storage) {
       if(typeof storage[metric] === 'number') {
@@ -72,8 +79,10 @@ class Graphite {
     storage = {}
 
     if(socket.writable && output) {
-      socket.write(output, 'utf8')
-      log.debug('Sending metrics to Graphite server:'+ util.fmlm(output))
+      socket.write(output, 'utf8', () => {
+        sending = false
+        log.debug('Metrics sent to Graphite server:'+ util.fmlm(output))
+      })
     }
   }
 

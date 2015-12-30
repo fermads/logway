@@ -1,11 +1,17 @@
 let util = require('./util')
 
+let SEC = 1000
+let GB = 1073741824
+
 let Config = {
   master: {
     workers: util.os.cpus // number of workers
   },
 
   worker: {
+    verifyHealthInterval: 5*SEC,
+    minFreeMemForNewRequests: 2.5*GB,
+
     http: {
       port: 80
     },
@@ -23,15 +29,16 @@ let Config = {
   },
 
   metric: {
-    flushInterval: util.env.production ? 10000 : 5000
+    maxMetricsPerPost: 100,
+    flushInterval: util.env.production ? 10*SEC : 5*SEC
   },
 
   graphite: {
     type: 'tcp', // TO-DO: implement
     host: '127.0.0.1',
     port: 231,
-    reconnectInterval: util.env.production ? 100000 : 10000,
-    flushInterval: util.env.production ? 60000 : 10000,
+    reconnectInterval: util.env.production ? 10*SEC : 1*SEC,
+    flushInterval: util.env.production ? 60*SEC : 10*SEC,
     maxValuesPerInterval: 1000000
   }
 }

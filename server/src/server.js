@@ -1,17 +1,20 @@
 let http = require('http')
 let url = require('url')
 let fs = require('fs')
+let os = require('os')
 let Metric = require('./metric')
 let Logger = require('../lib/logger')
 let Weblog = require('./weblog')
 let config = require('./config')
-let log, metric, weblog
+let log, metric, weblog, id, healthOk = true
 
 class Server {
   constructor() {
-    log = new Logger('server', config.logger)
+    id = process.env.id
+    log = new Logger('server'+ id, config.logger)
     metric = new Metric()
     weblog = new Weblog()
+    setInterval(this.health, config.worker.verifyHealthInterval)
     return this.start()
   }
 
@@ -26,22 +29,23 @@ class Server {
     return server
   }
 
-  cors(res) {
-    var headers = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Credentials': false,
-      'Access-Control-Max-Age': '86400',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
-    }
+  health() {
+    let freememOk = os.freemem() > config.worker.minFreeMemForNewRequests
 
-    res.writeHead(200, headers)
-    res.end()
+    if(!freememOk && healthOk) {
+      healthOk = false
+      log.warn('Low free memory. Stop accepting new requests')
+    }
+    else if(freememOk && !healthOk) {
+      healthOk = true
+      log.info('Free memory is OK now. Accepting new requests')
+    }
   }
 
   router(req, res, path) {
-    if(req.method == 'OPTIONS')
+    if(!healthOk)
+      this.unavailable(res)
+    else if(req.method == 'OPTIONS')
       this.cors(res)
     else if(path == '/metric')
       this.metric(req, res)
@@ -92,9 +96,29 @@ class Server {
     log.debug('404 not found: '+ path)
   }
 
+  unavailable(res) {
+    res.writeHead(503)
+    res.end('OK')
+  }
+
   ok(res) {
     res.writeHead(200)
     res.end('OK')
+  }
+
+  cors(res) {
+    var headers = {
+      'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Credentials': false,
+      // 'Access-Control-Max-Age': '86400',
+      'Access-Control-Allow-Headers':
+        'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+    }
+
+    res.writeHead(200, headers)
+    res.end()
   }
 
   response(req, callback) {

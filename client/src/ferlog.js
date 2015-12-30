@@ -7,14 +7,15 @@
   var prefix = opt('prefix', '');
   var host = opt('host', 'http://ferlog.uol.com.br/metric');
   var debug = opt('debug', false);
-  var globvar = opt('global', 'Fer');
+  var globvar = opt('global', 'Ferlog');
   var timeout = opt('timeout', 500);
   var regex = /^[a-z0-9_.]+$/;
+  var limit = 10, sent = 0;
 
   init();
 
   function init() {
-    log('Options are...'
+    log('Using options:'
       +'\n\tprefix : '+ prefix
       +'\n\thost   : '+ host
       +'\n\ttimeout: '+ timeout
@@ -22,6 +23,9 @@
 
     if(!w[globvar])
       w[globvar] = {};
+
+    if(!prefix)
+      return log('Prefix is required');
 
     if(prefix)
       prefix += '.';
@@ -43,10 +47,11 @@
   function validate(fqn, value, type) {
     if(typeof value == 'number'
         && ((value !== 0 && type == 'c') || type == 's')
+        && value <= 9e+20
         && regex.test(fqn))
       return true;
 
-    log('Invalid metric '+ fqn +' '+ value);
+    log('Skipping metric '+ fqn +' '+ value);
     return false;
   }
 
@@ -91,6 +96,11 @@
   }
 
   function send() {
+    if(++sent > limit) {
+      tid = 0;
+      return log('Rate limit exceeded');
+    }
+
     var req = new XMLHttpRequest();
     req.open('POST', host);
     req.ontimeout = function () {

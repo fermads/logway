@@ -1,11 +1,12 @@
 let Logger = require('../lib/logger')
 let config = require('./config')
 let util = require('./util')
-let storage = {}, log, regex
+let storage = {}, log, regex, id
 
 class Metric {
   constructor() {
-    log = new Logger('metric', config.logger)
+    id = process.env.id
+    log = new Logger('metric'+ id, config.logger)
 
     regex = /^[a-z0-9_.]+$/
 
@@ -26,7 +27,8 @@ class Metric {
   validate(fqn, value) {
     if(typeof value == 'number'
         && fqn.indexOf('.client.') > -1
-        && regex.test(value))
+        && value <= 9e+20
+        && regex.test(fqn))
       return true
 
     log.warn('Skipping metric '+ fqn +' '+ value)
@@ -37,15 +39,21 @@ class Metric {
     var prefix = ''
     var lines = content.split('\n')
 
-    if(lines.length === 0)
-      return
+    if(lines.length < 2) // at least prefix line and 1 metric line
+      return log.info('Invalid metrics')
 
-    if(lines[0].indexOf('!') !== -1) {
-      prefix = lines[0].split('!')[1]
-      lines.shift()
-    }
+    if(lines[0].indexOf('!') !== 0) // first line must be a !prefix
+      return log.info('Prefix is required')
 
-    for(var i = 0; i < lines.length; i++) {
+    prefix = lines[0].split('!')[1]
+    lines.shift()
+
+    // do not accept more then maxMetricsPerPost metrics
+    var llen = lines.length > config.metric.maxMetricsPerPost
+      ? config.metric.maxMetricsPerPost
+      : lines.length
+
+    for(var i = 0; i < llen; i++) {
       if(lines[i].indexOf(' ') === -1)
         continue
 

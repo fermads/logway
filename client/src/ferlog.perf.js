@@ -5,6 +5,8 @@
 
   function calculate() {
     var perfs = {
+      // to understand this, see:
+      // http://www.w3.org/TR/navigation-timing/timing-overview.png
       'redirect': t.redirectEnd - t.redirectStart,
       'fetchfromcache': t.domainLookupStart - t.fetchStart,
       'domainlookup': t.domainLookupEnd - t.domainLookupStart,
@@ -12,13 +14,11 @@
       'request': t.responseStart - t.requestStart,
       'response': t.responseEnd - t.responseStart,
       'dominteractive': t.domInteractive - t.domLoading,
-      'domcontentloaded': t.domContentLoadedEventEnd - t.domContentLoadedEventStart,
       'domcomplete': t.domComplete - t.domLoading,
       'loadcomplete': t.loadEventEnd - t.loadEventStart,
       'networklatency': t.responseEnd - t.fetchStart,
       'pageparse': t.loadEventEnd - t.responseEnd,
-      'pagefullload': t.loadEventEnd - t.navigationStart,
-      'jsheapsize': w.performance.memory && w.performance.memory.usedJSHeapSize
+      'pagefullload': t.loadEventEnd - t.navigationStart
     };
 
     return perfs;

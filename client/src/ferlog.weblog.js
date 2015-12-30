@@ -7,12 +7,25 @@
       var n = navinfo();
       // store errors and send them at once
 
-      console.log(navigator.platform, n[0], n[1],
-        location.href, e.filename, e.lineno, e.error.message);
+      console.log('error', navigator.platform, n[0], n[1],
+        url(location.href), url(e.filename), e.lineno, e.error.message);
 
       return false;
     });
   }
+
+  function url(u) {
+    return u.replace('http://', '').replace('https://', '');
+  }
+
+  /*var level = {
+    'FATAL' => 900,
+    'ERROR' => 850,
+    'WARN' => 700,
+    'INFO' => 500,
+    'DEBUG' => 300,
+    'TRACE' => 100,
+  }*/
 
   function navinfo(){
     var ua = navigator.userAgent, tem,
