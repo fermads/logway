@@ -5,8 +5,11 @@
   function init() {
     w.addEventListener('error', function(e) {
       var n = navinfo();
-      console.log(e.error.message, e.filename, e.lineno,
-        location.href, n[0], n[1], navigator.platform);
+      // store errors and send them at once
+
+      console.log(navigator.platform, n[0], n[1],
+        location.href, e.filename, e.lineno, e.error.message);
+
       return false;
     });
   }

@@ -55,8 +55,8 @@ class Server {
       this.file(res, 'ferlog.js', 'text/javascript')
     else if(path == '/ferlog.perf.js')
       this.file(res, 'ferlog.perf.js', 'text/javascript')
-    else if(path == '/ferlog.logger.js')
-      this.file(res, 'ferlog.logger.js', 'text/javascript')
+    else if(path == '/ferlog.weblog.js')
+      this.file(res, 'ferlog.weblog.js', 'text/javascript')
     else
       this.error(res, path)
   }
