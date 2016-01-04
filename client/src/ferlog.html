@@ -9,10 +9,10 @@
 <script src="/ferlog.js"
   data-ferlog-debug="true"
   data-ferlog-prefix="scoreboard.client"
-  data-ferlog-global="Ferlog"
-  data-ferlog-host="http://localhost/metric"></script>
+  data-ferlog-host="http://localhost/v1"></script>
 <script src="/ferlog.perf.js"></script>
 <script src="/ferlog.weblog.js"></script>
+<script src="/ferlog.timer.js"></script>
 <script>
 /* global Ferlog */
 
@@ -20,6 +20,7 @@ function runTests() {
   testAdd();
   testPut();
   testStats();
+  testLog();
   stressAdd();
   stressPut();
   stressStats();
@@ -44,6 +45,11 @@ function testPut() {
 function testStats() {
   Ferlog.stats('test.stats', 10);
   Ferlog.stats('test.stats', 20);
+}
+
+function testLog() {
+  Ferlog.log('INFO teste legal lalala');
+  Ferlog.log('ERROR outro teste de log');
 }
 
 function stressAdd() {

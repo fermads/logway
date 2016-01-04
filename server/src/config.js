@@ -28,9 +28,13 @@ let Config = {
     path: util.env.production ? '/export/logs/ferlog' : __dirname + '/../log'
   },
 
-  metric: {
-    maxMetricsPerPost: 100,
+  service: {
+    maxLinesPerPost: 100,
     flushInterval: util.env.production ? 10*SEC : 5*SEC
+  },
+
+  logstash: {
+
   },
 
   graphite: {

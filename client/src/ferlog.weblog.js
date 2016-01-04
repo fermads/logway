@@ -1,31 +1,64 @@
-;(function(w, d) {
+/* global Ferlog */
+;(function(w) {
 
-  init();
+  var u, p, n;
 
   function init() {
-    w.addEventListener('error', function(e) {
-      var n = navinfo();
-      // store errors and send them at once
+    u = url(location.href);
+    p = navigator.platform;
+    n = navinfo();
 
-      console.log('error', navigator.platform, n[0], n[1],
-        url(location.href), url(e.filename), e.lineno, e.error.message);
+    w.addEventListener('error', function(e) {
+      // log('trace '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+
+      //   url(e.filename) +' '+ e.lineno +' '+ e.error.message);
+      trace(url(e.filename) +' '+ e.lineno +' '+ e.error.message);
 
       return false;
     });
+
+    this.log = log;
+    this.fatal = fatal;
+    this.error = error;
+    this.warn = warn;
+    this.info = info;
+    this.debug = debug;
+    this.trace = trace;
+
+    return this;
   }
 
   function url(u) {
     return u.replace('http://', '').replace('https://', '');
   }
 
-  /*var level = {
-    'FATAL' => 900,
-    'ERROR' => 850,
-    'WARN' => 700,
-    'INFO' => 500,
-    'DEBUG' => 300,
-    'TRACE' => 100,
-  }*/
+  function log(level, m) {
+    var l = level || 'info';
+    Ferlog.log(l +' '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+ m);
+  }
+
+  function fatal(m) {
+    log('fatal', m);
+  }
+
+  function error(m) {
+    log('error', m);
+  }
+
+  function warn(m) {
+    log('warn', m);
+  }
+
+  function info(m) {
+    log('info', m);
+  }
+
+  function debug(m) {
+    log('debug', m);
+  }
+
+  function trace(m) {
+    log('trace', m);
+  }
 
   function navinfo(){
     var ua = navigator.userAgent, tem,
@@ -43,4 +76,6 @@
     return M;
   }
 
-})(window, document);
+  return init();
+
+})(window);

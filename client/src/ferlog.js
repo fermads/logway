@@ -1,16 +1,13 @@
 // colocar um rate limit no client maxsend = 100 por exemplo
 
 ;(function(w, d) {
-  var tid = 0;
-  var storage = {};
   var delay = opt('delay', 1000);
   var prefix = opt('prefix', '');
-  var host = opt('host', 'http://ferlog.uol.com.br/metric');
+  var host = opt('host', 'http://ferlog.uol.com.br/v1');
   var debug = opt('debug', false);
-  var globvar = opt('global', 'Ferlog');
   var timeout = opt('timeout', 500);
   var regex = /^[a-z0-9_.]+$/;
-  var limit = 10, sent = 0;
+  var tid = 0, limit = 10, sent = 0, metrics = {}, logs = [];
 
   init();
 
@@ -18,11 +15,10 @@
     log('Using options:'
       +'\n\tprefix : '+ prefix
       +'\n\thost   : '+ host
-      +'\n\ttimeout: '+ timeout
-      +'\n\tglobal : '+ globvar);
+      +'\n\ttimeout: '+ timeout);
 
-    if(!w[globvar])
-      w[globvar] = {};
+    if(!w.Ferlog)
+      w.Ferlog = {};
 
     if(!prefix)
       return log('Prefix is required');
@@ -61,11 +57,11 @@
     if(!validate(fqn, value, type))
       return;
 
-    if(storage[fqn] && type == 'c' && !reset) {
-      storage[fqn].value += value;
+    if(metrics[fqn] && type == 'c' && !reset) {
+      metrics[fqn].value += value;
     }
     else {
-      storage[fqn] = {
+      metrics[fqn] = {
         value: value,
         type: type
       };
@@ -74,27 +70,32 @@
     if(tid === 0)
       tid = setTimeout(send, delay);
 
-    log('Storing: '+ prefix + fqn +' '+ value +' '+ type);
+    log('Storing: '+ type +' '+ prefix + fqn +' '+ value);
   }
 
   function flush() {
     var output = '';
 
-    if(prefix) {
-      output = '!'+ prefix +'\n';
+    if(prefix && Object.keys(metrics).length > 0) {
+      output = 'p '+ prefix +'\n';
     }
 
-    for(var fqn in storage) {
-      output += fqn +' '+ storage[fqn].value +' '+ storage[fqn].type +'\n';
+    for(var fqn in metrics) {
+      output += metrics[fqn].type +' '+ fqn +' '+ metrics[fqn].value +'\n';
     }
 
-    storage = {};
+    metrics = {};
+
+    output += logs.join('\n');
+
+    logs = [];
+
     return output;
   }
 
   function log(text) {
     if(debug && console && console.log)
-      console.log('['+ globvar +'] '+ text);
+      console.log('[ferlog] '+ text);
   }
 
   function send() {
@@ -111,14 +112,25 @@
     req.timeout = timeout;
     req.setRequestHeader('Content-Type', 'text/plain');
 
-    var metrics = flush();
-    req.send(metrics);
-    log('Sending...\n\t'+ metrics.replace(/\n$/, '').replace(/\n/g, '\n\t'));
+    var all = flush();
+    req.send(all);
+    log('Sending...\n\t'+ all.replace(/\n$/, '').replace(/\n/g, '\n\t'));
 
     tid = 0;
   }
 
-  w[globvar].count = count;
-  w[globvar].stats = stats;
+  function weblog(msg) {
+    if(msg !== undefined)
+      logs.push('l '+ msg);
+
+    if(tid === 0)
+      tid = setTimeout(send, delay);
+
+    log('Storing: l '+ msg);
+  }
+
+  w.Ferlog.count = count;
+  w.Ferlog.stats = stats;
+  w.Ferlog.log = weblog;
 
 })(window, document);

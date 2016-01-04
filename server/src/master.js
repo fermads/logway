@@ -2,9 +2,10 @@ let cluster = require('cluster')
 let Worker = require('./worker')
 let Logger = require('../lib/logger')
 let Graphite = require('./graphite')
+let Logstash = require('./logstash')
 let config = require('./config')
 
-let log, graphite
+let log, graphite, logstash
 
 class Master {
 
@@ -12,6 +13,7 @@ class Master {
     if (cluster.isMaster) {
       log = new Logger('master', config.logger)
       graphite = new Graphite()
+      logstash = new Logstash()
       this.bind()
       this.start()
     }
@@ -39,8 +41,12 @@ class Master {
   fork(id) {
     let worker = cluster.fork({ id: id })
 
-    worker.on('message', message => {
-      graphite.add(message)
+    worker.on('message', content => {
+      if(content.metrics)
+        graphite.add(content.metrics)
+
+      if(content.weblogs)
+        logstash.add(content.weblogs)
     })
   }
 }

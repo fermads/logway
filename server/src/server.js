@@ -2,18 +2,16 @@ let http = require('http')
 let url = require('url')
 let fs = require('fs')
 let os = require('os')
-let Metric = require('./metric')
+let Service = require('./service')
 let Logger = require('../lib/logger')
-let Weblog = require('./weblog')
 let config = require('./config')
-let log, metric, weblog, id, healthOk = true
+let log, service, id, healthOk = true
 
 class Server {
   constructor() {
     id = process.env.id
     log = new Logger('server'+ id, config.logger)
-    metric = new Metric()
-    weblog = new Weblog()
+    service = new Service()
     setInterval(this.health, config.worker.verifyHealthInterval)
     return this.start()
   }
@@ -47,10 +45,8 @@ class Server {
       this.unavailable(res)
     else if(req.method == 'OPTIONS')
       this.cors(res)
-    else if(path == '/metric')
-      this.metric(req, res)
-    else if(path == '/weblog')
-      this.weblog(req, res)
+    else if(path == '/v1')
+      this.service(req, res)
     else if(path == '/health-check')
       this.ok(res)
     else if(path == '/')
@@ -59,6 +55,8 @@ class Server {
       this.file(res, 'ferlog.js', 'text/javascript')
     else if(path == '/ferlog.perf.js')
       this.file(res, 'ferlog.perf.js', 'text/javascript')
+    else if(path == '/ferlog.timer.js')
+      this.file(res, 'ferlog.timer.js', 'text/javascript')
     else if(path == '/ferlog.weblog.js')
       this.file(res, 'ferlog.weblog.js', 'text/javascript')
     else
@@ -76,16 +74,9 @@ class Server {
     })
   }
 
-  metric(req, res) {
+  service(req, res) {
     this.response(req, content => {
-      metric.write(content)
-    })
-    this.ok(res)
-  }
-
-  weblog(req, res) {
-    this.response(req, content => {
-      weblog.write(content)
+      service.write(content)
     })
     this.ok(res)
   }
