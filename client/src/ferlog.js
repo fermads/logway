@@ -37,6 +37,8 @@
   }
 
   function count(fqn, value, reset) {
+    if(value === undefined)
+      value = 1;
     store(fqn, value, 'c', reset);
   }
 
