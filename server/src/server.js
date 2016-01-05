@@ -2,6 +2,7 @@ let http = require('http')
 let url = require('url')
 let fs = require('fs')
 let os = require('os')
+let path = require('path')
 let Service = require('./service')
 let Logger = require('../lib/logger')
 let config = require('./config')
@@ -49,27 +50,29 @@ class Server {
       this.service(req, res)
     else if(path == '/health-check')
       this.ok(res)
-    else if(path == '/')
-      this.file(res, 'ferlog.html', 'text/html')
-    else if(path == '/ferlog.js')
-      this.file(res, 'ferlog.js', 'text/javascript')
-    else if(path == '/ferlog.perf.js')
-      this.file(res, 'ferlog.perf.js', 'text/javascript')
-    else if(path == '/ferlog.timer.js')
-      this.file(res, 'ferlog.timer.js', 'text/javascript')
-    else if(path == '/ferlog.weblog.js')
-      this.file(res, 'ferlog.weblog.js', 'text/javascript')
+    else if(path == '/' || path.indexOf('/ferlog.') === 0)
+      this.file(res, path == '/' ? '/ferlog.html' : path)
     else
       this.error(res, path)
   }
 
-  file(res, filename, contentType) {
-    fs.readFile(__dirname +'/../../client/src/' + filename, 'utf8',
-      (error, data) => {
-      if (error)
-        return error(res, error)
+  mime(extension) {
+    var types = {
+      '.html': 'text/html',
+      '.js': 'text/javascript'
+    }
+    return {'content-type' : types[extension]}
+  }
 
-      res.writeHead(200, {'content-type' : contentType})
+  file(res, filename) {
+    let extension = path.extname(filename)
+    let fullpath = __dirname +'/../../client/src'+ filename
+
+    fs.readFile(fullpath, 'utf8', (error, data) => {
+      if (error)
+        return this.error(res, filename)
+
+      res.writeHead(200, this.mime(extension))
       res.end(data)
     })
   }

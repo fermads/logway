@@ -1,9 +1,9 @@
+;(function(w) {
 
-;(function() {
+  var timer = null;
+  var log = w.Ferlog.log;
 
-  function init(startNow) {
-    this.timer = null;
-
+  function Timer(startNow) {
     this.end = end;
     this.start = start;
 
@@ -13,19 +13,25 @@
   }
 
   function start() {
-    this.timer = Date.now();
-    return this.timer;
+    timer = Date.now();
+    return timer;
   }
 
-  function end() {
-    if(!this.timer)
-      return console && console.error('Timer not started');
+  function end(metric) {
+    if(!timer)
+      return log('Timer not started');
 
-    var result = Date.now() - this.timer;
-    this.timer = null;
+    if(!metric)
+      return log('Metric name is required');
+
+    var result = Date.now() - timer;
+    timer = null;
+
+    w.Ferlog.stats(metric, result);
 
     return result;
   }
 
-  return init();
-})();
+  w.Ferlog.Timer = Timer;
+
+})(window);

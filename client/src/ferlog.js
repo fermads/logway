@@ -87,7 +87,6 @@
     metrics = {};
 
     output += logs.join('\n');
-
     logs = [];
 
     return output;
@@ -119,7 +118,7 @@
     tid = 0;
   }
 
-  function weblog(msg) {
+  function write(msg) {
     if(msg !== undefined)
       logs.push('l '+ msg);
 
@@ -131,6 +130,7 @@
 
   w.Ferlog.count = count;
   w.Ferlog.stats = stats;
-  w.Ferlog.log = weblog;
+  w.Ferlog.write = write;
+  w.Ferlog.log = log;
 
 })(window, document);

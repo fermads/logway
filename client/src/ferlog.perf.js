@@ -1,4 +1,4 @@
-;(function(w, d) {
+;(function(w) {
   var t = w.performance.timing;
 
   init();
@@ -36,8 +36,7 @@
     var result = calculate();
 
     for(var item in result) {
-      Ferlog.stats('performance.'+ item, result[item]);
-      // console.log('performance.'+ item, result[item]);
+      w.Ferlog.stats('perf.'+ item, result[item]);
     }
   }
 })(window, document);

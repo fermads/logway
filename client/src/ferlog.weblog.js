@@ -1,22 +1,16 @@
-/* global Ferlog */
 ;(function(w) {
 
   var u, p, n;
+  var log = w.Ferlog.log;
 
   function init() {
     u = url(location.href);
     p = navigator.platform;
     n = navinfo();
 
-    w.addEventListener('error', function(e) {
-      // log('trace '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+
-      //   url(e.filename) +' '+ e.lineno +' '+ e.error.message);
-      trace(url(e.filename) +' '+ e.lineno +' '+ e.error.message);
+    bind();
 
-      return false;
-    });
-
-    this.log = log;
+    this.write = write;
     this.fatal = fatal;
     this.error = error;
     this.warn = warn;
@@ -27,37 +21,46 @@
     return this;
   }
 
+  function bind() {
+    w.addEventListener('error', function(e) {
+      trace(url(e.filename) +' '+ e.lineno +' '+ e.error.message);
+      return false;
+    });
+  }
+
   function url(u) {
     return u.replace('http://', '').replace('https://', '');
   }
 
-  function log(level, m) {
+  function write(level, m) {
     var l = level || 'info';
-    Ferlog.log(l +' '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+ m);
+    if(!m)
+      return log('Log message is require');
+    w.Ferlog.write(l +' '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+ m);
   }
 
   function fatal(m) {
-    log('fatal', m);
+    write('fatal', m);
   }
 
   function error(m) {
-    log('error', m);
+    write('error', m);
   }
 
   function warn(m) {
-    log('warn', m);
+    write('warn', m);
   }
 
   function info(m) {
-    log('info', m);
+    write('info', m);
   }
 
   function debug(m) {
-    log('debug', m);
+    write('debug', m);
   }
 
   function trace(m) {
-    log('trace', m);
+    write('trace', m);
   }
 
   function navinfo(){
