@@ -51,4 +51,4 @@ class Master {
   }
 }
 
-module.exports = new Master()
+module.exports = Master

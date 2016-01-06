@@ -1,1 +1,3 @@
-require('./master')
+let Master = require('./master')
+
+new Master()

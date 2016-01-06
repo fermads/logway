@@ -9,11 +9,12 @@ let config = require('./config')
 let log, service, id, healthOk = true
 
 class Server {
+
   constructor() {
     id = process.env.id
     log = new Logger('server'+ id, config.logger)
     service = new Service()
-    setInterval(this.health, config.worker.verifyHealthInterval)
+    setInterval(this.health, config.worker.verifyFreeMemInterval)
     return this.start()
   }
 
@@ -23,7 +24,7 @@ class Server {
     let server = http.createServer((req, res) => {
       path = url.parse(req.url).pathname
       this.router(req, res, path)
-    }).listen(80)
+    }).listen(config.server.httpPort)
 
     return server
   }
@@ -66,7 +67,7 @@ class Server {
 
   file(res, filename) {
     let extension = path.extname(filename)
-    let fullpath = __dirname +'/../../client/src'+ filename
+    let fullpath = config.server.basePath + filename
 
     fs.readFile(fullpath, 'utf8', (error, data) => {
       if (error)

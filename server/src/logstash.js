@@ -3,8 +3,9 @@ let config = require('./config')
 let log, options, storage = []
 
 class Logstash {
+
   constructor() {
-    log = new Logger('graphite', config.logger)
+    log = new Logger('logstash', config.logger)
     options = config.logstash
   }
 
@@ -14,6 +15,6 @@ class Logstash {
       storage.push(lines[i])
     }
   }
-
 }
+
 module.exports = Logstash

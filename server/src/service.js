@@ -4,6 +4,7 @@ let util = require('./util')
 let metrics = {}, weblogs = [], log, regex, id
 
 class Service {
+
   constructor() {
     id = process.env.id
     log = new Logger('service'+ id, config.logger)

@@ -8,6 +8,7 @@ let util = require('./util')
 let storage = {}, socket, log, hp, options, stats, sending = false
 
 class Graphite {
+
   constructor() {
     log = new Logger('graphite', config.logger)
     stats = new Stats()

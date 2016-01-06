@@ -4,6 +4,7 @@ let config = require('./config')
 let log, id, storage = {}
 
 class Worker {
+
   constructor() {
     id = process.env.id
     process.title = 'node ferlog worker '+ id
