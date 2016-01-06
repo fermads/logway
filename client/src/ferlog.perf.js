@@ -1,5 +1,7 @@
 ;(function(w) {
-  var t = w.performance.timing;
+
+  var t = w.performance && w.performance.timing;
+  var log = w.Ferlog.log;
 
   init();
 
@@ -25,18 +27,19 @@
   }
 
   function init() {
-    if(!t) return;
+    if(!t)
+      return log('Performance API not supported by this browser');
 
     w.addEventListener('load', function() {
-      setTimeout(sendPerfInfo,0);
+      setTimeout(send, 0);
     });
   }
 
-  function sendPerfInfo() {
+  function send() {
     var result = calculate();
 
     for(var item in result) {
       w.Ferlog.stats('perf.'+ item, result[item]);
     }
   }
-})(window, document);
+})(window);

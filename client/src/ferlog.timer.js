@@ -3,12 +3,17 @@
   var timer = null;
   var log = w.Ferlog.log;
 
-  function Timer(startNow) {
+  function Timer(metric, startNow) {
+    if(!metric)
+      return log('Metric name is required');
+
+    this.metric = metric;
     this.end = end;
     this.start = start;
 
     if(startNow)
       start();
+
     return this;
   }
 
@@ -17,17 +22,14 @@
     return timer;
   }
 
-  function end(metric) {
+  function end() {
     if(!timer)
       return log('Timer not started');
-
-    if(!metric)
-      return log('Metric name is required');
 
     var result = Date.now() - timer;
     timer = null;
 
-    w.Ferlog.stats(metric, result);
+    w.Ferlog.stats(this.metric, result);
 
     return result;
   }

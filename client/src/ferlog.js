@@ -1,13 +1,12 @@
-// colocar um rate limit no client maxsend = 100 por exemplo
-
 ;(function(w, d) {
+
   var delay = opt('delay', 1000);
   var prefix = opt('prefix', '');
   var host = opt('host', 'http://ferlog.uol.com.br/v1');
   var debug = opt('debug', false);
   var timeout = opt('timeout', 500);
   var regex = /^[a-z0-9_.]+$/;
-  var tid = 0, limit = 10, sent = 0, metrics = {}, logs = [];
+  var tid = 0, maxSize = 200, sentLimit = 10, sent = 0, metrics = {}, logs = [];
 
   init();
 
@@ -75,8 +74,12 @@
 
   function flush() {
     var output = '';
+    var size = Object.keys(metrics).length;
 
-    if(prefix && Object.keys(metrics).length > 0) {
+    if(logs.length + size > maxSize)
+      return log('Too many lines');
+
+    if(prefix && size > 0) {
       output = 'p '+ prefix +'\n';
     }
 
@@ -98,9 +101,9 @@
   }
 
   function send() {
-    if(++sent > limit) {
+    if(++sent > sentLimit) {
       tid = 0;
-      return log('Rate limit exceeded');
+      return log('Limit exceeded');
     }
 
     var req = new XMLHttpRequest();
