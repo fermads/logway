@@ -50,17 +50,17 @@ class Graphite {
   }
 
   send() {
+    if(Object.keys(storage).length === 0)
+      return
+
     var now = new Date()
     var output = ''
     var mts = (now.getTime() / 1000 | 0)
 
     if(sending === true) {
       storage = {}
-      return log.error('Skipping this batch!')
+      return log.error('Skipping this batch! Last one is still sending')
     }
-
-    if(Object.keys(storage).length === 0)
-      return
 
     sending = true
 

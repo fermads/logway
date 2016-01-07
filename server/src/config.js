@@ -12,7 +12,7 @@ let Config = {
 
   worker: {
     verifyFreeMemInterval: 5*SEC,
-    minFreeMemForNewRequests: 2.5*GB,
+    minFreeMemForNewRequests: 0.5*GB,
   },
 
   server: {
@@ -34,7 +34,12 @@ let Config = {
   },
 
   logstash: {
-
+    type: 'tcp',
+    host: '127.0.0.1',
+    port: '9000',
+    reconnectInterval: PROD ? 10*SEC : 1*SEC,
+    flushInterval: PROD ? 60*SEC : 10*SEC,
+    maxValuesPerInterval: 1000000
   },
 
   graphite: {

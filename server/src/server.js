@@ -79,6 +79,7 @@ class Server {
   }
 
   service(req, res) {
+    // ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
     this.response(req, content => {
       service.write(content)
     })

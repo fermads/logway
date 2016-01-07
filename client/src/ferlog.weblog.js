@@ -36,7 +36,7 @@
     var l = level || 'info';
     if(!m)
       return log('Log message is require');
-    w.Ferlog.write(l +' '+ p +' '+ n[0] +' '+ n[1] +' '+ u +' '+ m);
+    w.Ferlog.write(l +' '+ p +' '+ n +' '+ u +' '+ m);
   }
 
   function fatal(m) {
@@ -76,7 +76,7 @@
     }
     M = M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
     if((tem = ua.match(/version\/(\d+)/i)) !== null) M.splice(1, 1, tem[1]);
-    return M;
+    return M.join(' ');
   }
 
   return init();
