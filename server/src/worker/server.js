@@ -4,8 +4,8 @@ let fs = require('fs')
 let os = require('os')
 let path = require('path')
 let Service = require('./service')
-let Logger = require('../lib/logger')
-let config = require('./config')
+let Logger = require('../../lib/logger')
+let config = require('../config')
 let log, service, id, healthOk = true
 
 class Server {
@@ -57,14 +57,6 @@ class Server {
       this.error(res, path)
   }
 
-  mime(extension) {
-    var types = {
-      '.html': 'text/html',
-      '.js': 'text/javascript'
-    }
-    return {'content-type' : types[extension]}
-  }
-
   file(res, filename) {
     let extension = path.extname(filename)
     let fullpath = config.server.basePath + filename
@@ -73,7 +65,7 @@ class Server {
       if (error)
         return this.error(res, filename)
 
-      res.writeHead(200, this.mime(extension))
+      res.writeHead(200, config.server.mimeTypes[extension])
       res.end(data)
     })
   }

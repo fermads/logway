@@ -1,9 +1,9 @@
 let cluster = require('cluster')
-let Worker = require('./worker')
-let Logger = require('../lib/logger')
+let Worker = require('../worker/worker')
+let Logger = require('../../lib/logger')
 let Graphite = require('./graphite')
 let Logstash = require('./logstash')
-let config = require('./config')
+let config = require('../config')
 
 let log, graphite, logstash
 

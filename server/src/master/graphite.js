@@ -1,9 +1,9 @@
 let os = require('os')
 let net = require('net')
-let Logger = require('../lib/logger')
-let Stats = require('../lib/statistics')
-let config = require('./config')
-let util = require('./util')
+let Logger = require('../../lib/logger')
+let Stats = require('../../lib/statistics')
+let config = require('../config')
+let util = require('../util')
 
 let storage = {}, socket, log, hp, options, stats, sending = false
 
@@ -50,11 +50,16 @@ class Graphite {
   }
 
   send() {
-    if(Object.keys(storage).length === 0)
-      return
-
     var output = ''
     var mts = ~~(Date.now() / 1000) //bitwise double NOT transform +float to int
+    var size = Object.keys(storage).length
+
+    if(size === 0)
+      return
+
+    if(size > options.maxMetricsPerInterval)
+      return log.error('Skipping this batch! Too big! Size: '+ size +' lines')
+
 
     if(sending === true) {
       storage = {}

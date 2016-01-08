@@ -1,7 +1,7 @@
 let net = require('net')
-let Logger = require('../lib/logger')
-let config = require('./config')
-let util = require('./util')
+let Logger = require('../../lib/logger')
+let config = require('../config')
+let util = require('../util')
 
 let log, options, storage = [], hp, socket, sending = false
 
@@ -43,10 +43,14 @@ class Logstash {
   }
 
   send() {
-    if(storage.length === 0)
+    var size = storage.length
+    var output = ''
+
+    if(size === 0)
       return
 
-    var output = ''
+    if(size > options.maxLogsPerInterval)
+      return log.error('Skipping this batch! Too big! Size: '+ size +' lines')
 
     if(sending === true) {
       storage = []

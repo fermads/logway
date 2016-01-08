@@ -1,6 +1,6 @@
-let Logger = require('../lib/logger')
-let config = require('./config')
-let util = require('./util')
+let Logger = require('../../lib/logger')
+let config = require('../config')
+let util = require('../util')
 let metrics = {}, weblogs = [], log, regex, id
 
 class Service {

@@ -1,6 +1,6 @@
 let Server = require('./server')
-let Logger = require('../lib/logger')
-let config = require('./config')
+let Logger = require('../../lib/logger')
+let config = require('../config')
 let log, id, storage = {}
 
 class Worker {

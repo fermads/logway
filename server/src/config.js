@@ -20,6 +20,10 @@ let Config = {
     httpsPort: 443,
     httpsCert: '',
     basePath: __dirname +'/../../client/src',
+    mimeTypes: {
+      '.html': 'text/html',
+      '.js': 'text/javascript'
+    }
   },
 
   logger: {
@@ -39,7 +43,7 @@ let Config = {
     port: '9000',
     reconnectInterval: PROD ? 10*SEC : 1*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
-    maxValuesPerInterval: 1000000
+    maxLogsPerInterval: 100000
   },
 
   graphite: {
@@ -48,7 +52,7 @@ let Config = {
     port: 231,
     reconnectInterval: PROD ? 10*SEC : 1*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
-    maxValuesPerInterval: 1000000
+    maxMetricsPerInterval: 1000000
   }
 }
 
