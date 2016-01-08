@@ -53,9 +53,8 @@ class Graphite {
     if(Object.keys(storage).length === 0)
       return
 
-    var now = new Date()
     var output = ''
-    var mts = (now.getTime() / 1000 | 0)
+    var mts = ~~(Date.now() / 1000) //bitwise double NOT transform +float to int
 
     if(sending === true) {
       storage = {}
