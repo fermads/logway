@@ -1,6 +1,6 @@
 ;(function(w) {
 
-  // var log = w.Ferlog.log;
+  // var log = w.Logway.log;
 
   function ABTest() {
 
@@ -8,6 +8,6 @@
   }
 
 
-  w.Ferlog.ABTest = ABTest;
+  w.Logway.ABTest = ABTest;
 
 })(window);

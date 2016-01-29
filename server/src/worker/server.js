@@ -51,8 +51,8 @@ class Server {
       this.service(req, res)
     else if(path == '/health-check')
       this.ok(res)
-    else if(path == '/' || path.indexOf('/ferlog.') === 0)
-      this.file(res, path == '/' ? '/ferlog.html' : path)
+    else if(path == '/' || path.indexOf('/logway.') === 0)
+      this.file(res, path == '/' ? '/logway.html' : path)
     else
       this.error(res, path)
   }

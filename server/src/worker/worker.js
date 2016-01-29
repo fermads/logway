@@ -7,7 +7,7 @@ class Worker {
 
   constructor() {
     id = process.env.id
-    process.title = 'node ferlog worker '+ id
+    process.title = 'node logway worker '+ id
 
     log = new Logger('worker'+ id, config.logger)
 

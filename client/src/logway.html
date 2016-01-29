@@ -6,15 +6,15 @@
 <body>
 
 
-<script src="/ferlog.js"
-  data-ferlog-debug="true"
-  data-ferlog-prefix="scoreboard.client"
-  data-ferlog-host="http://localhost/v1"></script>
-<script src="/ferlog.perf.js"></script>
-<script src="/ferlog.weblog.js"></script>
-<script src="/ferlog.timer.js"></script>
+<script src="/logway.js"
+  data-logway-debug="true"
+  data-logway-prefix="scoreboard.client"
+  data-logway-host="http://localhost/v1"></script>
+<script src="/logway.perf.js"></script>
+<script src="/logway.weblog.js"></script>
+<script src="/logway.timer.js"></script>
 <script>
-/* global Ferlog */
+/* global Logway */
 
 function runTests() {
   testAdd();
@@ -32,30 +32,30 @@ function rand(i) {
 }
 
 function testAdd() {
-  Ferlog.count('test.count', 2);
-  Ferlog.count('test.count', 4);
+  Logway.count('test.count', 2);
+  Logway.count('test.count', 4);
 }
 
 function testPut() {
-  Ferlog.count('test.countreset', 4, true);
-  Ferlog.count('test.countreset', 6, true);
+  Logway.count('test.countreset', 4, true);
+  Logway.count('test.countreset', 6, true);
 
 }
 
 function testStats() {
-  Ferlog.stats('test.stats', 10);
-  Ferlog.stats('test.stats', 20);
+  Logway.stats('test.stats', 10);
+  Logway.stats('test.stats', 20);
 }
 
 function testLog() {
-  Ferlog.write('INFO teste legal lalala');
-  Ferlog.write('ERROR outro teste de log');
+  Logway.write('INFO teste legal lalala');
+  Logway.write('ERROR outro teste de log');
 }
 
 function stressAdd() {
   setTimeout(function() {
     for(var i = 0; i<100;i++) {
-      Ferlog.count('stress.count', rand());
+      Logway.count('stress.count', rand());
     }
   }, 2000);
 }
@@ -63,7 +63,7 @@ function stressAdd() {
 function stressPut() {
   setTimeout(function() {
     for(var i = 0; i<100;i++) {
-      Ferlog.count('stress.countreset', rand());
+      Logway.count('stress.countreset', rand());
     }
   }, 4000);
 }
@@ -71,7 +71,7 @@ function stressPut() {
 function stressStats() {
   setTimeout(function() {
     for(var i = 0; i<100;i++) {
-      Ferlog.stats('stress.stats', rand());
+      Logway.stats('stress.stats', rand());
     }
   }, 6000);
 }

@@ -2,7 +2,7 @@
 
   var delay = opt('delay', 1000);
   var prefix = opt('prefix', '');
-  var host = opt('host', 'http://ferlog.uol.com.br/v1');
+  var host = opt('host', '');
   var debug = opt('debug', false);
   var timeout = opt('timeout', 500);
   var regex = /^[a-z0-9_.]+$/;
@@ -16,8 +16,8 @@
       +'\n\thost   : '+ host
       +'\n\ttimeout: '+ timeout);
 
-    if(!w.Ferlog)
-      w.Ferlog = {};
+    if(!w.Logway)
+      w.Logway = {};
 
     if(!prefix)
       return log('Prefix is required');
@@ -27,8 +27,8 @@
   }
 
   function opt(prop, defaultValue) {
-    var sel = d.querySelector('[data-ferlog-'+ prop +']');
-    return sel ? sel.getAttribute('data-ferlog-'+ prop) : defaultValue;
+    var sel = d.querySelector('[data-logway-'+ prop +']');
+    return sel ? sel.getAttribute('data-logway-'+ prop) : defaultValue;
   }
 
   function count(fqn, value, reset) {
@@ -97,7 +97,7 @@
 
   function log(text) {
     if(debug && console && console.log)
-      console.log('[ferlog] '+ text);
+      console.log('[logway] '+ text);
   }
 
   function send() {
@@ -131,9 +131,9 @@
     log('Storing: l '+ msg);
   }
 
-  w.Ferlog.count = count;
-  w.Ferlog.stats = stats;
-  w.Ferlog.write = write;
-  w.Ferlog.log = log;
+  w.Logway.count = count;
+  w.Logway.stats = stats;
+  w.Logway.write = write;
+  w.Logway.log = log;
 
 })(window, document);

@@ -1,7 +1,7 @@
 ;(function(w) {
 
   var u, p, n;
-  var log = w.Ferlog.log;
+  var log = w.Logway.log;
 
   function init() {
     u = url(location.href);
@@ -36,7 +36,7 @@
     var l = level || 'info';
     if(!m)
       return log('Log message is require');
-    w.Ferlog.write(l +' '+ p +' '+ n +' '+ u +' '+ m);
+    w.Logway.write(l +' '+ p +' '+ n +' '+ u +' '+ m);
   }
 
   function fatal(m) {

@@ -29,7 +29,7 @@ let Config = {
   logger: {
     console: PROD ? false : true,
     debug: PROD ? false : true,
-    path: PROD ? '/export/logs/ferlog' : __dirname + '/../log'
+    path: PROD ? '/export/logs/logway' : __dirname + '/../log'
   },
 
   service: {

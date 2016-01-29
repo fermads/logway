@@ -1,7 +1,7 @@
 ;(function(w) {
 
   var t = w.performance && w.performance.timing;
-  var log = w.Ferlog.log;
+  var log = w.Logway.log;
 
   init();
 
@@ -41,7 +41,7 @@
     // TO-DO: verificar se os dados estao como 0 antes de enviar
     // TO-DO: enviar apenas uma %
     for(var item in result) {
-      w.Ferlog.stats('perf.'+ item, result[item]);
+      w.Logway.stats('perf.'+ item, result[item]);
     }
   }
 })(window);

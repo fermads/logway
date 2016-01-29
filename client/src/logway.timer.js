@@ -1,7 +1,7 @@
 ;(function(w) {
 
   var timer = null;
-  var log = w.Ferlog.log;
+  var log = w.Logway.log;
 
   function Timer(metric, startNow) {
     if(!metric)
@@ -29,11 +29,11 @@
     var result = Date.now() - timer;
     timer = null;
 
-    w.Ferlog.stats(this.metric, result);
+    w.Logway.stats(this.metric, result);
 
     return result;
   }
 
-  w.Ferlog.Timer = Timer;
+  w.Logway.Timer = Timer;
 
 })(window);

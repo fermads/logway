@@ -1,4 +1,4 @@
-# ferlog - Front End Remote Analytics and Logging
+# Logway - Front-end Remote Metrics and Logging
 
 Send metrics and logs from the client (browser)
 to the server (Graphite / Logstash).
@@ -15,37 +15,37 @@ Can be used for:
   add to the page you want to get metrics or send logs:
 
 ```js
-  <script src="/ferlog.js"
-    data-ferlog-debug="true"
-    data-ferlog-prefix="scoreboard.client"
-    data-ferlog-host="http://localhost/v1"></script>
+  <script src="/logway.js"
+    data-logway-debug="true"
+    data-logway-prefix="scoreboard.client"
+    data-logway-host="http://localhost/v1"></script>
 ```
 
 #### Options
-* data-ferlog-debug (Boolean): Turn on/off console messages
-* data-ferlog-prefix (String): Prefix to prepend to every metric
-* data-ferlog-host (String): Host to send metrics/logs
+* data-logway-debug (Boolean): Turn on/off console messages
+* data-logway-prefix (String): Prefix to prepend to every metric
+* data-logway-host (String): Host to send metrics/logs
 
 ### Client API - Core
 
-#### Ferlog.count
+#### Logway.count
 Send a counter to the server
 ```js
-  Ferlog.count('test.countreset', 4);
+  Logway.count('test.countreset', 4);
 ```
 
-#### Ferlog.stats
+#### Logway.stats
 Send a value to the server. This value will be grouped with other values for the
 same metric and statistics will be generated (percentiles, average/mean,
 standard deviation, sum, lower and upper bounds)
 ```js
-  Ferlog.stats('test.stats', 10);
+  Logway.stats('test.stats', 10);
 ```
 
-#### Ferlog.write
+#### Logway.write
 Write logs to the server
 ```js
-  Ferlog.write('Testing 1 2 3');
+  Logway.write('Testing 1 2 3');
 ```
 
 
