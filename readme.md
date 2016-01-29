@@ -1,11 +1,11 @@
 # ferlog - Front End Remote Analytics and Logging
 
-Client and server application for sending metrics and logs from the
-client (browser) to the server (Graphite / Logstash).
+Send metrics and logs from the client (browser)
+to the server (Graphite / Logstash).
 
 Can be used for:
-* Getting performance.timing information (HTML5 API)
 * Store browser logs/erros on the server
+* Getting performance.timing information (HTML5 API)
 * A/B testing
 * Simple feature vote
 

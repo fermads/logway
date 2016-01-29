@@ -38,6 +38,8 @@
   function send() {
     var result = calculate();
 
+    // TO-DO: verificar se os dados estao como 0 antes de enviar
+    // TO-DO: enviar apenas uma %
     for(var item in result) {
       w.Ferlog.stats('perf.'+ item, result[item]);
     }
