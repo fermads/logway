@@ -51,6 +51,8 @@ class Log {
         fs.statSync(path)
       }
       catch(err) {
+        if (err.code == 'ENOENT')
+          console.log('Log path does not exist', path)
         throw err
       }
     }
