@@ -86,12 +86,12 @@ class Server {
 
   unavailable(res) {
     res.writeHead(503)
-    res.end('OK')
+    res.end('service unavailable')
   }
 
   ok(res) {
     res.writeHead(200)
-    res.end('OK')
+    res.end('ok')
   }
 
   cors(res) {
