@@ -1,12 +1,12 @@
-# Logway - Front-end Remote Metrics and Logging
+# Logway - Front-end remote metrics and logging
 
 Send metrics and logs from the client (browser)
 to the server (Graphite / Logstash).
 
 Can be used for:
-* Store browser logs/erros on the server
+* Storing browser logs/erros on the server
 * Getting performance.timing information (HTML5 API)
-* A/B testing
+* Count A/B test scenarios
 * Simple feature vote
 
 ## Client
@@ -15,9 +15,9 @@ Can be used for:
   add to the page you want to get metrics or send logs:
 
 ```js
-  <script src="/logway.js"
+  <script src="/logway.min.js"
     data-logway-debug="true"
-    data-logway-prefix="scoreboard.client"
+    data-logway-prefix="productname.client"
     data-logway-host="http://localhost/v1"></script>
 ```
 
@@ -48,10 +48,10 @@ Write logs to the server
   Logway.write('Testing 1 2 3');
 ```
 
-
+<!--
 ## Server
 
 ## Install
 
 ## Usage
-
+-->
