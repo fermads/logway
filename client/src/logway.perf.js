@@ -32,7 +32,7 @@
       return log('Performance API not supported by this browser');
 
     if(Math.random() * 100 > percent)
-      return log('Number in the '+ percent +'%');
+      return log('This user not in the '+ percent +'%');
 
     w.addEventListener('load', function() {
       setTimeout(send, 0);
