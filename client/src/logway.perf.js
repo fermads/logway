@@ -2,6 +2,7 @@
 
   var t = w.performance && w.performance.timing;
   var log = w.Logway.log;
+  var percent = 10;
 
   init();
 
@@ -30,6 +31,9 @@
     if(!t)
       return log('Performance API not supported by this browser');
 
+    if(Math.random() * 100 > percent)
+      return log('Number in the '+ percent +'%');
+
     w.addEventListener('load', function() {
       setTimeout(send, 0);
     });
@@ -38,8 +42,9 @@
   function send() {
     var result = calculate();
 
-    // TO-DO: verificar se os dados estao como 0 antes de enviar
-    // TO-DO: enviar apenas uma %
+    if(result.pagefullload === 0)
+      return log('Could not calculate performance.timing');
+
     for(var item in result) {
       w.Logway.stats('perf.'+ item, result[item]);
     }
