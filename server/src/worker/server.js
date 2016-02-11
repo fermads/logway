@@ -1,12 +1,13 @@
+let config = require('../config')
 let http = require('http')
-let https = require('https')
+let https = require(config.server.useHttp2 ? 'http2' : 'https')
 let url = require('url')
 let fs = require('fs')
 let os = require('os')
 let path = require('path')
 let Service = require('./service')
 let Logger = require('../../lib/logger')
-let config = require('../config')
+
 let log, service, id, healthOk = true, keys
 
 class Server {

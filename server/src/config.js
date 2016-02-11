@@ -17,6 +17,7 @@ let Config = {
   },
 
   server: {
+    useHttp2: false,
     httpPort: 80,
     httpsPort: 443,
     httpsKeys: {
