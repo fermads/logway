@@ -1,4 +1,5 @@
 let http = require('http')
+let https = require('https')
 let url = require('url')
 let fs = require('fs')
 let os = require('os')
@@ -6,7 +7,7 @@ let path = require('path')
 let Service = require('./service')
 let Logger = require('../../lib/logger')
 let config = require('../config')
-let log, service, id, healthOk = true
+let log, service, id, healthOk = true, keys
 
 class Server {
 
@@ -15,18 +16,36 @@ class Server {
     log = new Logger('server'+ id, config.logger)
     service = new Service()
     setInterval(this.health, config.worker.verifyFreeMemInterval)
-    return this.start()
+    keys = this.getHttpsKeys()
+    this.start()
+  }
+
+  getHttpsKeys() {
+    try {
+      return {
+        key: fs.readFileSync(config.server.httpsKeys.key),
+        cert: fs.readFileSync(config.server.httpsKeys.cert)
+      }
+    }
+    catch(e) {
+      log.warn('HTTPS keys not found. HTTPS server NOT running.')
+    }
   }
 
   start() {
     let path
 
-    let server = http.createServer((req, res) => {
+    http.createServer((req, res) => {
       path = url.parse(req.url).pathname
       this.router(req, res, path)
     }).listen(config.server.httpPort)
 
-    return server
+    if(keys) {
+      https.createServer(keys, (req, res) => {
+        path = url.parse(req.url).pathname
+        this.router(req, res, path)
+      }).listen(config.server.httpsPort)
+    }
   }
 
   health() {
