@@ -111,14 +111,12 @@ class Log {
   }
 
   fileDate(now) { // date for log filename
-    return now.getFullYear() +'-'+ this.padz(now.getMonth()+1, 2) +'-'
-      + this.padz(now.getDate(), 2)
+    return this.lineDate(now).split(' ')[0]
   }
 
   lineDate(now) { // date for log line
-    return this.padz(now.getDate(), 2) +'/'+ this.padz(now.getMonth()+1, 2) +'/'
-      + now.getFullYear() +' '+ now.toLocaleTimeString() +'.'
-      + this.padz(now.getMilliseconds(), 3)
+    now.setHours(now.getHours() - now.getTimezoneOffset() / 60)
+    return now.toISOString().replace('T',' ').replace('Z','')
   }
 
   write(line, now) {

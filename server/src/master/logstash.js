@@ -68,6 +68,9 @@ class Logstash {
         log.debug('Logs sent to Logstash server:'+ util.fmlm(output))
       })
     }
+    else {
+      sending = false
+    }
   }
 
   add(lines) {

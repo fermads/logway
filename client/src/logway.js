@@ -2,7 +2,7 @@
 
   var delay = opt('delay', 1000);
   var prefix = opt('prefix', '');
-  var host = opt('host', '');
+  var host = opt('host', '//'+ location.hostname +'/v1');
   var debug = opt('debug', false);
   var timeout = opt('timeout', 500);
   var regex = /^[a-z0-9_.]+$/;
@@ -103,7 +103,7 @@
   function send() {
     if(++sent > sentLimit) {
       tid = 0;
-      return log('Limit exceeded');
+      return log('Send limit exceeded');
     }
 
     var req = new XMLHttpRequest();
