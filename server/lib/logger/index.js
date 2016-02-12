@@ -116,7 +116,7 @@ class Log {
 
   lineDate(now) { // date for log line
     now.setHours(now.getHours() - now.getTimezoneOffset() / 60)
-    return now.toISOString().replace('T',' ').replace('Z','')
+    return now.toISOString().replace('T', ' ').replace('Z', '')
   }
 
   write(line, now) {
@@ -126,7 +126,8 @@ class Log {
       if(this.file) // end the stream before creating a new one
         this.file.end()
 
-      this.file = fs.createWriteStream(this.options.path +'/'+ this.fileDate(now) +'-'
+      this.file = fs.createWriteStream(this.options.path
+        +'/'+ this.fileDate(now) +'-'
         + this.suffix +'.log', { flags:'a' })
 
       this.file.on('error', err => {
