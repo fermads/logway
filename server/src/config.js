@@ -1,9 +1,10 @@
 let os = require('os')
 
-let SEC = 1000
-let GB = 1073741824
-let PROD = !Boolean(process.env.DEVELOPMENT)
-let CPUS = os.cpus().length
+const SEC = 1000
+const GB = 1073741824
+const PROD = !Boolean(process.env.DEVELOPMENT)
+const CPUS = os.cpus().length
+const BASE = __dirname + '/../..'
 
 let Config = {
   master: {
@@ -12,14 +13,14 @@ let Config = {
 
   worker: {
     verifyFreeMemInterval: 5*SEC,
-    minFreeMemForNewRequests: 0.5*GB,
+    minFreeMemForNewRequests: 1*GB,
   },
 
   server: {
     httpPort: 80,
     httpsPort: 443,
     httpsCert: '',
-    basePath: __dirname +'/../../client/src',
+    basePath: BASE +'/client/src',
     mimeTypes: {
       '.html': 'text/html',
       '.js': 'text/javascript'
@@ -29,7 +30,7 @@ let Config = {
   logger: {
     console: PROD ? false : true,
     debug: PROD ? false : true,
-    path: PROD ? '/export/logs/logway' : __dirname + '/../log'
+    path: PROD ? '/export/logs/logway' : BASE +'/server/log'
   },
 
   service: {
