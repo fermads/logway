@@ -1,10 +1,10 @@
 let os = require('os')
 
-const SEC = 1000
-const GB = 1073741824
-const PROD = !Boolean(process.env.DEVELOPMENT)
-const CPUS = os.cpus().length
-const BASE = __dirname + '/../..'
+let SEC = 1000
+let GB = 1073741824
+let PROD = !Boolean(process.env.DEVELOPMENT)
+let CPUS = os.cpus().length
+let BASE = __dirname + '/../..'
 
 let Config = {
   master: {
@@ -17,10 +17,14 @@ let Config = {
   },
 
   server: {
+    useHttp2: false,
     httpPort: 80,
     httpsPort: 443,
-    httpsCert: '',
-    basePath: BASE +'/client/src',
+    httpsKeys: {
+      key: BASE + '/server/etc/key/logway-key.pem',
+      cert: BASE + '/server/etc/key/logway-cert.pem'
+    },
+    basePath: BASE + '/client/src',
     mimeTypes: {
       '.html': 'text/html',
       '.js': 'text/javascript'
@@ -28,9 +32,9 @@ let Config = {
   },
 
   logger: {
-    console: PROD ? false : true,
-    debug: PROD ? false : true,
-    path: PROD ? '/export/logs/logway' : BASE +'/server/log'
+    console: !PROD,
+    debug: !PROD,
+    path: PROD ? '/export/logs/logway' : BASE + '/server/log'
   },
 
   service: {
@@ -39,19 +43,21 @@ let Config = {
   },
 
   logstash: {
+    enabled: true,
     type: 'tcp',
     host: '127.0.0.1',
     port: '9000',
-    reconnectInterval: PROD ? 10*SEC : 1*SEC,
+    reconnectInterval: PROD ? 60*SEC : 1*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
     maxLogsPerInterval: 100000
   },
 
   graphite: {
+    enabled: true,
     type: 'tcp', // TO-DO: implement
     host: '127.0.0.1',
     port: 231,
-    reconnectInterval: PROD ? 10*SEC : 1*SEC,
+    reconnectInterval: PROD ? 60*SEC : 1*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
     maxMetricsPerInterval: 1000000
   }
