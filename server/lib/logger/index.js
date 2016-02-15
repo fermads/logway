@@ -116,7 +116,7 @@ class Log {
 
   lineDate(now) { // date for log line
     now.setHours(now.getHours() - now.getTimezoneOffset() / 60)
-    return now.toISOString().replace('T', ' ').replace('Z', '')
+    return now.toISOString().replace('T', ' ').slice(0, -1)
   }
 
   write(line, now) {
