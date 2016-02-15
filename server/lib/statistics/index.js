@@ -64,22 +64,5 @@ class Statistics {
     return r
   }
 }
-/*
-var stats = new Statistics()
-
-var values = []
-
-var ini = Date.now()
-for(var x =0; x < 10000; x++) {
-  stats.insert(parseFloat((Math.random()*10000).toFixed(0)), values)
-}
-
-for(var n = 0; n<1000; n++ ) {
-  var x = stats.calculate(values);
-}
-console.log(Date.now() - ini);
-
-console.log(x);
-*/
 
 module.exports = Statistics
