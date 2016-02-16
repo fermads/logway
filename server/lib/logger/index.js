@@ -1,49 +1,57 @@
-
 let fs = require('fs')
-
-const colors = {
-  trace: '\x1b[37m',
-  debug: '\x1b[36m',
-  info: '\x1b[32m',
-  warn: '\x1b[33m',
-  error: '\x1b[31m',
-  fatal: '\x1b[35m',
-  reset: '\x1b[39m'
-}
+let os = require('os')
+let util = require('util')
 
 const levels = {
-  trace: 'TRACE',
-  debug: 'DEBUG',
-  info: 'INFOR',
-  warn: 'WARNG',
-  error: 'ERROR',
-  fatal: 'FATAL'
+  trace: { color: '\x1b[37m', text: 'TRACE' },
+  debug: { color: '\x1b[36m', text: 'DEBUG' },
+  info: { color: '\x1b[32m', text: 'INFOR' },
+  warn: { color: '\x1b[33m', text: 'WARNG' },
+  error: { color: '\x1b[31m', text: 'ERROR' },
+  fatal: { color: '\x1b[35m', text: 'FATAL' }
 }
 
-var instances = {}
+/*
+var options = {
+  debug: false | true,
+  host: false | string | true = os.hostname(),
+  name: string,
+  printname: false | true
+  console: true | false
+  path: false | string
+}
+*/
+let instances = {}
 
-class Log {
-  constructor (logname, config) {
-    if (instances[logname])
-      return instances[logname]
+class Logger {
+  constructor (name, config) {
+    if (instances[name])
+      return instances[name]
     else
-      instances[logname] = this
+      instances[name] = this
 
-    this.options = config
+    this.setup(name, config)
+  }
 
-    if (!logname || logname.match(/\W/) || logname.length > 8) {
-      throw Error('Log file suffix is required, must match /[a-zA-Z_0-9]/'
+  setup (name, config) {
+    if (!name || name.match(/\W/) || name.length > 8) {
+      throw Error('Log name is required, must match /[a-zA-Z0-9_]/'
         + ' and have length <= 8')
     }
 
-    if (!this.options.path && !this.options.console)
-      this.options.console = true
+    this.console = config.console || true
+    this.verbose = config.debug || false
+    this.host = config.host === true ? ' ' + os.hostname() : ''
+    this.path = config.path
+    this.label = this.pads(name, 8)
 
-    this.label = this.pads(logname, 8)
-    this.suffix = logname
+    this.name = name
 
-    if (this.options.path)
-      this.exists(this.options.path)
+    if (!this.path && !this.console)
+      this.console = true
+
+    if (this.path)
+      this.exists(this.path)
   }
 
   exists (path) {
@@ -59,52 +67,67 @@ class Log {
     }
   }
 
-  color (level, message) {
-    return colors[level] + message + colors.reset
-  }
-
   pads (s, v) {
     return (s + '       ').substring(0, v)
   }
 
-  put (line, level) {
+  parseArgs (args) {
+    // fast common case
+    if (args.length === 1 && typeof args[0] === 'string')
+      return args[0]
+
+    var arr = Array.prototype.slice.call(args)
+
+    for (var i = 0; i < arr.length; i++) {
+      if (typeof arr[i] === 'object' || arr[i] === undefined)
+        arr[i] = util.inspect(arr[i])
+    }
+
+    return arr.join(' ')
+  }
+
+  put (args, level) {
+    let line = this.parseArgs(args)
     let now = new Date()
+
     level = level || 'info'
-    line = this.lineDate(now) + ' ' + levels[level] + ' ' + line
+    line = this.lineDate(now) + ' ' + levels[level].text + this.host
+      + ' ' + line
 
-    if (this.options.console)
-      console.log(this.label + ' -> ' + this.color(level, line))
+    if (this.console)
+      console.log(this.label + ' -> ' + levels[level].color + line + '\x1b[39m')
 
-    if (this.options.path)
+    if (this.path)
       this.write(line, now)
   }
 
-  debug (line) {
-    if (this.options.debug)
-      this.put(line, 'debug')
+  debug () {
+    if (this.verbose)
+      this.put(arguments, 'debug')
   }
 
-  fatal (line) {
-    this.put(line, 'fatal')
-    if (!this.options.console) // also write to console on fatal error
-      console.log(line)
+  fatal () {
+    this.put(arguments, 'fatal')
+    if (!this.console) // also write to console on fatal error
+      console.log(this.parseArgs(arguments))
   }
 
-  trace (line) {
+  trace () {
     let stack = new Error().stack.split('\n').slice(2, 10).join('\n')
-    this.put(line + '\n' + stack, 'trace')
+    arguments[arguments.length++] = '\n' + stack
+    this.put(arguments, 'trace')
   }
 
-  info (line) {
-    this.put(line, 'info')
+  info () {
+    this.put(arguments, 'info')
   }
 
-  warn (line) {
-    this.put(line, 'warn')
+  warn () {
+    this.put(arguments, 'warn')
   }
 
-  error (line) {
-    this.put(line, 'error')
+  error () {
+    this.put(arguments, 'error')
   }
 
   fileDate (now) { // date for log filename
@@ -123,9 +146,9 @@ class Log {
       if (this.file) // end the stream before creating a new one
         this.file.end()
 
-      this.file = fs.createWriteStream(this.options.path
+      this.file = fs.createWriteStream(this.path
         + '/' + this.fileDate(now) + '-'
-        + this.suffix + '.log', { flags: 'a' })
+        + this.name + '.log', { flags: 'a' })
 
       this.file.on('error', err => {
         throw Error(err)
@@ -136,4 +159,4 @@ class Log {
   }
 }
 
-module.exports = Log
+module.exports = Logger

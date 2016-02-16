@@ -132,11 +132,11 @@ class Server {
   response (req, callback) {
     let chunks = []
 
-    req.on('data', function (chunk) {
+    req.on('data', chunk => {
       chunks.push(chunk)
     })
 
-    req.on('end', function () {
+    req.on('end', () => {
       callback(Buffer.concat(chunks))
     })
   }

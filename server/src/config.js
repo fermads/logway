@@ -47,7 +47,7 @@ let Config = {
     type: 'tcp',
     host: '127.0.0.1',
     port: '9000',
-    reconnectInterval: PROD ? 60*SEC : 1*SEC,
+    reconnectInterval: PROD ? 60*SEC : 5*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
     maxLogsPerInterval: 100000
   },
@@ -57,7 +57,7 @@ let Config = {
     type: 'tcp', // TO-DO: implement
     host: '127.0.0.1',
     port: 231,
-    reconnectInterval: PROD ? 60*SEC : 1*SEC,
+    reconnectInterval: PROD ? 60*SEC : 5*SEC,
     flushInterval: PROD ? 60*SEC : 10*SEC,
     maxMetricsPerInterval: 1000000
   }

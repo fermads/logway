@@ -9,11 +9,11 @@ let storage = {}, socket, log, hp, options, stats, sending = false
 
 class Graphite {
 
-  constructor() {
+  constructor () {
     log = new Logger('graphite', config.logger)
     stats = new Stats()
     options = config.graphite
-    hp = options.host +':'+ options.port
+    hp = options.host + ':' + options.port
 
     options.hostname = os.hostname()
 
@@ -24,8 +24,8 @@ class Graphite {
     this.connect()
   }
 
-  connect() {
-    if(socket) {
+  connect () {
+    if (socket) {
       socket.destroy()
       socket = null
     }
@@ -34,34 +34,33 @@ class Graphite {
     socket.connect(options.port, options.host)
 
     socket.on('connect', () => {
-      log.info('Connected to Graphite server '+ hp)
+      log.info('Connected to Graphite server ' + hp)
     })
 
     socket.on('error', e => {
-      log.error('Error connecting to Graphite: '+ e.message)
+      log.error('Error connecting to Graphite: ' + e.message)
     })
 
     socket.on('close', () => {
       setTimeout(() => {
-        log.info('Trying to reconnect to '+ hp)
+        log.info('Trying to reconnect to ' + hp)
         this.connect(options)
       }, options.reconnectInterval)
     })
   }
 
-  send() {
+  send () {
     var output = ''
-    var mts = ~~(Date.now() / 1000) //bitwise double NOT transform +float to int
+    var mts = ~~(Date.now() / 1000) // bitwise double NOT transform float to int
     var size = Object.keys(storage).length
 
-    if(size === 0)
+    if (size === 0)
       return
 
-    if(size > options.maxMetricsPerInterval)
-      return log.error('Skipping this batch! Too big! Size: '+ size +' lines')
+    if (size > options.maxMetricsPerInterval)
+      return log.error('Skipping this batch! Too big! Size: ' + size + ' lines')
 
-
-    if(sending === true) {
+    if (sending === true) {
       storage = {}
       return log.error('Skipping this batch! Last one is still sending')
     }
@@ -69,53 +68,53 @@ class Graphite {
     sending = true
 
     for (var metric in storage) {
-      if(typeof storage[metric] === 'number') {
-        output += metric +'.'+ options.hostname
-          +' '+ storage[metric] +' '+ mts +'\n'
-      } else {
+      if (typeof storage[metric] === 'number') {
+        output += metric + '.' + options.hostname
+          + ' ' + storage[metric] + ' ' + mts + '\n'
+      }
+      else {
         let result = stats.calculate(storage[metric])
-        for(var stat in result) {
-          output += metric +'.'+ stat +'.'+ options.hostname
-            +' '+ result[stat] +' '+ mts +'\n'
+        for (var stat in result) {
+          output += metric + '.' + stat + '.' + options.hostname
+            + ' ' + result[stat] + ' ' + mts + '\n'
         }
-     }
+      }
     }
 
     storage = {}
 
-    if(socket.writable && output) {
+    if (socket.writable && output) {
       socket.write(output, 'utf8', () => {
         sending = false
-        log.debug('Metrics sent to Graphite server:'+ util.fmlm(output))
+        log.debug('Metrics sent to Graphite server:' + util.fmlm(output))
       })
     }
   }
 
-  add(metrics) {
+  add (metrics) {
     for (let fqn in metrics) {
       let value = metrics[fqn]
-      let type = typeof value == 'number' ? 'c' : 's'
+      let type = typeof value === 'number' ? 'c' : 's'
 
-      if (type == 'c')
+      if (type === 'c')
         this.count(value, fqn)
-      else if (type == 's')
+      else if (type === 's')
         this.stats(value, fqn)
       else
-        log.warn('Invalid metric type '+ type)
+        log.warn('Invalid metric type ' + type)
     }
   }
 
-  count(value, fqn) {
+  count (value, fqn) {
     storage[fqn] = storage[fqn] ? (storage[fqn] + value) : value
   }
 
-  stats(arr, fqn) {
-    if(!storage[fqn])
+  stats (arr, fqn) {
+    if (!storage[fqn])
       storage[fqn] = []
 
-    for(let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++)
       stats.insert(arr[i], storage[fqn])
-    }
   }
 }
 

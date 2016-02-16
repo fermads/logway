@@ -5,11 +5,11 @@ let log, id, storage = {}
 
 class Worker {
 
-  constructor() {
+  constructor () {
     id = process.env.id
-    process.title = 'node logway worker '+ id
+    process.title = 'node logway worker ' + id
 
-    log = new Logger('worker'+ id, config.logger)
+    log = new Logger('worker' + id, config.logger)
 
     new Server()
 
@@ -19,11 +19,11 @@ class Worker {
       this.send()
     }, config.graphite.flushInterval)
 
-    log.info('Worker '+ id +' started')
+    log.info('Worker ' + id + ' started')
   }
 
-  send() {
-    if(Object.keys(storage).length === 0)
+  send () {
+    if (Object.keys(storage).length === 0)
       return
 
     process.send(storage, () => {
@@ -31,20 +31,20 @@ class Worker {
     })
   }
 
-  parse(content) {
+  parse (content) {
     var prefix = ''
     var lines = content.split('\n')
 
-    if(lines.length === 0)
+    if (lines.length === 0)
       return
 
-    if(lines[0].indexOf('!') !== -1) {
+    if (lines[0].indexOf('!') !== -1) {
       prefix = lines[0].split('!')[1]
       lines.shift()
     }
 
-    for(var i = 0; i < lines.length; i++) {
-      if(lines[i].indexOf(' ') === -1)
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].indexOf(' ') === -1)
         continue
 
       var parts = lines[i].split(' ')
@@ -52,25 +52,25 @@ class Worker {
       var value = Number(parts[1])
       var type = parts[2]
 
-      if(!this.validate(fqn, value))
+      if (!this.validate(fqn, value))
         continue
 
-      log.debug('Adding ('+ type +') metric: '+ fqn +' '+ value)
+      log.debug('Adding (' + type + ') metric: ' + fqn + ' ' + value)
 
-      if(storage[fqn])
+      if (storage[fqn])
         storage[fqn] = storage[fqn] + value
       else
         storage[fqn] = value
     }
   }
 
-  bind() {
+  bind () {
     // master -> worker comm
-    // process.on('message', function(data) {
+    // process.on('message', data => {
     //   log.info(data)
     // })
 
-    process.on('uncaughtException', function(error) {
+    process.on('uncaughtException', error => {
       log.fatal(error.stack)
       process.exit(1)
     })

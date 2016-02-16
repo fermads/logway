@@ -7,18 +7,18 @@ let log, options, storage = [], hp, socket, sending = false
 
 class Logstash {
 
-  constructor() {
+  constructor () {
     log = new Logger('logstash', config.logger)
     options = config.logstash
-    hp = options.host +':'+ options.port
+    hp = options.host + ':' + options.port
 
     setInterval(this.send, options.flushInterval)
 
     this.connect()
   }
 
-  connect() {
-    if(socket) {
+  connect () {
+    if (socket) {
       socket.destroy()
       socket = null
     }
@@ -27,32 +27,32 @@ class Logstash {
     socket.connect(options.port, options.host)
 
     socket.on('connect', () => {
-      log.info('Connected to Logstash server '+ hp)
+      log.info('Connected to Logstash server ' + hp)
     })
 
     socket.on('error', e => {
-      log.error('Error connecting to Logstash: '+ e.message)
+      log.error('Error connecting to Logstash: ' + e.message)
     })
 
     socket.on('close', () => {
       setTimeout(() => {
-        log.info('Trying to reconnect to '+ hp)
+        log.info('Trying to reconnect to ' + hp)
         this.connect(options)
       }, options.reconnectInterval)
     })
   }
 
-  send() {
+  send () {
     var size = storage.length
     var output = ''
 
-    if(size === 0)
+    if (size === 0)
       return
 
-    if(size > options.maxLogsPerInterval)
-      return log.error('Skipping this batch! Too big! Size: '+ size +' lines')
+    if (size > options.maxLogsPerInterval)
+      return log.error('Skipping this batch! Too big! Size: ' + size + ' lines')
 
-    if(sending === true) {
+    if (sending === true) {
       storage = []
       return log.error('Skipping this batch! Last one is still sending')
     }
@@ -62,10 +62,10 @@ class Logstash {
 
     storage = []
 
-    if(socket.writable && output) {
+    if (socket.writable && output) {
       socket.write(output, 'utf8', () => {
         sending = false
-        log.debug('Logs sent to Logstash server:'+ util.fmlm(output))
+        log.debug('Logs sent to Logstash server:' + util.fmlm(output))
       })
     }
     else {
@@ -73,8 +73,8 @@ class Logstash {
     }
   }
 
-  add(lines) {
-    for(var i = 0; i < lines.length ; i++) {
+  add (lines) {
+    for (var i = 0; i < lines.length; i++) {
       storage.push(lines[i])
     }
   }
