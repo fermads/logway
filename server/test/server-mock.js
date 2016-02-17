@@ -2,48 +2,50 @@ let net = require('net')
 
 class ServerMock {
 
-  constructor() {
+  constructor () {
     this.startGraphiteMockServer()
     this.startLogstashMockServer()
   }
 
-  startLogstashMockServer() {
+  startLogstashMockServer () {
     let server = net.createServer(socket => {
       socket.on('data', data => {
-        console.log('Received data:', data.toString())
+        console.log('[logstash-mock] Received data:', data.toString())
       })
 
       socket.on('close', () => {
-        console.log('Connection closed')
+        console.log('[logstash-mock] Connection closed')
       })
 
       socket.on('error', error => {
-        console.log(error)
+        console.log('[logstash-mock]', error)
       })
     })
 
     server.listen({port: 9000}, () => {
-      console.log('Logstash mock server running...', server.address())
+      console.log('[logstash-mock] Server running on port 9000',
+        server.address())
     })
   }
 
-  startGraphiteMockServer() {
+  startGraphiteMockServer () {
     let server = net.createServer(socket => {
       socket.on('data', data => {
-        console.log('Received data:', data.toString())
+        console.log('[graphite-mock] Received data:', data.toString())
       })
 
       socket.on('close', () => {
-        console.log('Connection closed')
+        console.log('[graphite-mock] Connection closed')
       })
 
       socket.on('error', error => {
-        console.log(error)
+        console.log('[graphite-mock]', error)
       })
     })
 
     server.listen({port: 231}, () => {
-      console.log('Graphite mock server running...', server.address())
+      console.log('[graphite-mock] Server running on port 231',
+        server.address())
     })
   }
 
