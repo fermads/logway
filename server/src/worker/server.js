@@ -29,7 +29,7 @@ class Server {
       }
     }
     catch (e) {
-      log.warn('HTTPS keys not found. HTTPS server NOT running.')
+      log.warn('SSL/TSL keys not found. HTTPS server NOT running.')
     }
   }
 
