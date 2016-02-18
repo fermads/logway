@@ -1,0 +1,6 @@
+p scoreboard.client.
+c test.count 6
+c test.countreset 6
+s test.stats 20
+l INFO teste legal lalala
+l WARN outro teste de log

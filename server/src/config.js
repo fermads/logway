@@ -1,10 +1,10 @@
 let os = require('os')
 
-let SEC = 1000
-let GB = 1073741824
-let PROD = !Boolean(process.env.DEVELOPMENT)
-let CPUS = os.cpus().length
-let BASE = __dirname + '/../..'
+const SEC = 1000
+const GB = 1073741824
+const PROD = !process.env.DEVELOPMENT
+const CPUS = os.cpus().length
+const BASE = __dirname + '/../..'
 
 let Config = {
   master: {
@@ -12,8 +12,8 @@ let Config = {
   },
 
   worker: {
-    verifyFreeMemInterval: 5*SEC,
-    minFreeMemForNewRequests: 1*GB,
+    verifyFreeMemInterval: 5 * SEC,
+    minFreeMemForNewRequests: PROD ? 1 * GB : 0.5 * GB
   },
 
   server: {
@@ -39,7 +39,7 @@ let Config = {
 
   service: {
     maxLinesPerPost: 100,
-    flushInterval: PROD ? 10*SEC : 5*SEC
+    flushInterval: PROD ? 10 * SEC : 5 * SEC
   },
 
   logstash: {
@@ -47,8 +47,8 @@ let Config = {
     type: 'tcp',
     host: '127.0.0.1',
     port: '9000',
-    reconnectInterval: PROD ? 60*SEC : 5*SEC,
-    flushInterval: PROD ? 60*SEC : 10*SEC,
+    reconnectInterval: PROD ? 60 * SEC : 5 * SEC,
+    flushInterval: PROD ? 60 * SEC : 10 * SEC,
     maxLogsPerInterval: 100000
   },
 
@@ -57,8 +57,8 @@ let Config = {
     type: 'tcp', // TO-DO: implement
     host: '127.0.0.1',
     port: 231,
-    reconnectInterval: PROD ? 60*SEC : 5*SEC,
-    flushInterval: PROD ? 60*SEC : 10*SEC,
+    reconnectInterval: PROD ? 60 * SEC : 5 * SEC,
+    flushInterval: PROD ? 60 * SEC : 10 * SEC,
     maxMetricsPerInterval: 1000000
   }
 }

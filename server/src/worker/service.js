@@ -26,28 +26,30 @@ class Service {
     })
   }
 
-  validate (fqn, value) {
-    if (typeof value === 'number'
-        && fqn.indexOf('.client.') > -1
-        && value <= 9e+20
-        && regex.test(fqn))
-      return true
-
-    log.warn('Skipping metric ' + fqn + ' ' + value)
-    return false
+  validate (prefix, parts, fqn, value) {
+    if (typeof value !== 'number'
+        || parts.length !== 3
+        || prefix.length < 9 // at least x.client.
+        || fqn.indexOf('.client.') === -1
+        || value > 9e+20
+        || !regex.test(fqn)) {
+      log.warn('Skipping metric ' + fqn + ' ' + value)
+      return false
+    }
+    return true
   }
 
   parse (content) {
     var prefix = ''
     var lines = content.split('\n')
 
-    if (lines.length < 1)
-      return log.info('Invalid content')
-
     if (lines[0].indexOf('p ') === 0) {
       prefix = lines[0].split(' ')[1]
       lines.shift()
     }
+
+    if (lines.length < 1)
+      return log.info('Invalid content')
 
     // do not accept more then maxLinesPerPost
     var llen = lines.length > config.service.maxLinesPerPost
@@ -55,24 +57,23 @@ class Service {
       : lines.length
 
     for (var i = 0; i < llen; i++) {
-      if (lines[i].indexOf(' ') !== 1) // second char must be a space
+      if (lines[i].indexOf(' ') !== 1) { // second char must be a space
+        log.debug('Invalid metric format:', lines[i])
         continue
+      }
 
       var parts = lines[i].split(' ')
       var type = parts[0]
 
-      if (type === 'l') {
+      if (type === 'l') { // web log only need 'l ' to work
         this.weblog(lines[i].substr(2)) // remove the type (first 2 chars)
         continue
       }
 
-      if (prefix === '') // metrics need a prefix
-        break
-
       var fqn = prefix + parts[1]
       var value = Number(parts[2])
 
-      if (!this.validate(fqn, value))
+      if (!this.validate(prefix, parts, fqn, value))
         continue
 
       if (type === 'c')
