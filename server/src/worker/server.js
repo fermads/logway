@@ -1,6 +1,6 @@
 let config = require('../config')
 let http = require('http')
-let https = require(config.server.useHttp2 ? 'http2' : 'https')
+let https = require(config.server.useHttp2 ? '../../lib/http2' : 'https')
 let url = require('url')
 let fs = require('fs')
 let os = require('os')
