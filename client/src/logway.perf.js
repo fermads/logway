@@ -1,12 +1,11 @@
-;(function(w) {
+;(function (w) {
+  var t = w.performance && w.performance.timing
+  var log = w.Logway.log
+  var percent = 10
 
-  var t = w.performance && w.performance.timing;
-  var log = w.Logway.log;
-  var percent = 10;
+  init()
 
-  init();
-
-  function calculate() {
+  function calculate () {
     var perfs = {
       // to understand this, see:
       // http://www.w3.org/TR/navigation-timing/timing-overview.png
@@ -22,31 +21,32 @@
       'networklatency': t.responseEnd - t.fetchStart,
       'pageparse': t.loadEventEnd - t.responseEnd,
       'pagefullload': t.loadEventEnd - t.navigationStart
-    };
+    }
 
-    return perfs;
+    return perfs
   }
 
-  function init() {
-    if(!t)
-      return log('Performance API not supported by this browser');
+  function init () {
+    if (!t) return log('Performance API not supported by this browser')
 
-    if(Math.random() * 100 > percent)
-      return log('This user not in the '+ percent +'%');
+    if (Math.random() * 100 > percent) {
+      return log('This user not in the ' + percent + '%')
+    }
 
-    w.addEventListener('load', function() {
-      setTimeout(send, 0);
-    });
+    w.addEventListener('load', function () {
+      setTimeout(send, 0)
+    })
   }
 
-  function send() {
-    var result = calculate();
+  function send () {
+    var result = calculate()
 
-    if(result.pagefullload === 0)
-      return log('Could not calculate performance.timing');
+    if (result.pagefullload === 0) {
+      return log('Could not calculate performance.timing')
+    }
 
-    for(var item in result) {
-      w.Logway.stats('perf.'+ item, result[item]);
+    for (var item in result) {
+      w.Logway.stats('perf.' + item, result[item])
     }
   }
-})(window);
+})(window)

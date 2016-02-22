@@ -1,39 +1,34 @@
-;(function(w) {
+;(function (w) {
+  var timer = null
+  var log = w.Logway.log
 
-  var timer = null;
-  var log = w.Logway.log;
+  function Timer (metric, startNow) {
+    if (!metric) return log('Metric name is required')
 
-  function Timer(metric, startNow) {
-    if(!metric)
-      return log('Metric name is required');
+    this.metric = metric
+    this.end = end
+    this.start = start
 
-    this.metric = metric;
-    this.end = end;
-    this.start = start;
+    if (startNow) start()
 
-    if(startNow)
-      start();
-
-    return this;
+    return this
   }
 
-  function start() {
-    timer = Date.now();
-    return timer;
+  function start () {
+    timer = Date.now()
+    return timer
   }
 
-  function end() {
-    if(!timer)
-      return log('Timer not started');
+  function end () {
+    if (!timer) return log('Timer not started')
 
-    var result = Date.now() - timer;
-    timer = null;
+    var result = Date.now() - timer
+    timer = null
 
-    w.Logway.stats(this.metric, result);
+    w.Logway.stats(this.metric, result)
 
-    return result;
+    return result
   }
 
-  w.Logway.Timer = Timer;
-
-})(window);
+  w.Logway.Timer = Timer
+})(window)
