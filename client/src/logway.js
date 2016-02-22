@@ -74,20 +74,15 @@
     var output = ''
     var size = Object.keys(metrics).length
 
-    if (logs.length + size > maxSize) {
-      return log('Too many lines')
-    }
+    if (logs.length + size > maxSize) return log('Too many lines')
 
-    if (prefix && size > 0) {
-      output = 'p ' + prefix + '\n'
-    }
+    if (prefix && size > 0) output = 'p ' + prefix + '\n'
 
     for (var fqn in metrics) {
       output += metrics[fqn].type + ' ' + fqn + ' ' + metrics[fqn].value + '\n'
     }
 
     metrics = {}
-
     output += logs.join('\n')
     logs = []
 
@@ -96,7 +91,7 @@
 
   function log (text) {
     if (debug && console && console.log) {
-      console.log('[logway] ' + text)
+      console.log('[logway]', text)
     }
   }
 
