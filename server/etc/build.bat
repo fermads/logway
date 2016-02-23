@@ -8,7 +8,7 @@ set finalpath=%initpath:\server\etc=%
 mkdir c:\opt\UOLI\node\logway
 
 xcopy /s /e /i %finalpath%\* c:\opt\UOLI\node\logway
-del /q c:\opt\UOLI\node\logway\log\*.*
+del /q c:\opt\UOLI\node\logway\server\log\*.*
 
 rem -xr!log
 rem "c:\Program Files\7-Zip"\7z a -ttar -xr!.git -xr!.svn C:\logway.tar C:\opt
