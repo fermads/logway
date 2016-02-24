@@ -1,12 +1,12 @@
 class Util {
 
-  isObject(obj) {
-    return typeof obj == 'object' && obj !== null && obj.constructor == Object
+  isObject (obj) {
+    return typeof obj === 'object' && obj !== null && obj.constructor === Object
   }
 
-  fmlm(content) {
-    return '\n            '+
-      content.toString()
+  fmlm (content) {
+    return '\n            '
+      + content.toString()
         .replace(/\n$/, '')
         .replace(/\n/g, '\n            ')
   }

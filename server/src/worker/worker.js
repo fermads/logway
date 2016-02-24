@@ -23,8 +23,7 @@ class Worker {
   }
 
   send () {
-    if (Object.keys(storage).length === 0)
-      return
+    if (Object.keys(storage).length === 0) return
 
     process.send(storage, () => {
       storage = {}
@@ -35,8 +34,7 @@ class Worker {
     var prefix = ''
     var lines = content.split('\n')
 
-    if (lines.length === 0)
-      return
+    if (lines.length === 0) return
 
     if (lines[0].indexOf('!') !== -1) {
       prefix = lines[0].split('!')[1]
@@ -44,23 +42,19 @@ class Worker {
     }
 
     for (var i = 0; i < lines.length; i++) {
-      if (lines[i].indexOf(' ') === -1)
-        continue
+      if (lines[i].indexOf(' ') === -1) continue
 
       var parts = lines[i].split(' ')
       var fqn = prefix + parts[0]
       var value = Number(parts[1])
       var type = parts[2]
 
-      if (!this.validate(fqn, value))
-        continue
+      if (!this.validate(fqn, value)) continue
 
       log.debug('Adding (' + type + ') metric: ' + fqn + ' ' + value)
 
-      if (storage[fqn])
-        storage[fqn] = storage[fqn] + value
-      else
-        storage[fqn] = value
+      if (storage[fqn]) storage[fqn] = storage[fqn] + value
+      else storage[fqn] = value
     }
   }
 

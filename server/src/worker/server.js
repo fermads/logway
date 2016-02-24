@@ -63,18 +63,24 @@ class Server {
   }
 
   router (req, res, path) {
-    if (!healthOk)
+    if (!healthOk) {
       this.unavailable(res)
-    else if (req.method === 'OPTIONS')
+    }
+    else if (req.method === 'OPTIONS') {
       this.cors(res)
-    else if (path === '/v1')
+    }
+    else if (path === '/v1') {
       this.service(req, res)
-    else if (path === '/health-check')
+    }
+    else if (path === '/health-check') {
       this.ok(res)
-    else if (path === '/' || path.indexOf('/logway.') === 0)
+    }
+    else if (path === '/' || path.indexOf('/logway.') === 0) {
       this.file(res, path === '/' ? '/logway.html' : path)
-    else
+    }
+    else {
       this.error(res, path)
+    }
   }
 
   file (res, filename) {
@@ -82,8 +88,7 @@ class Server {
     let fullpath = config.server.basePath + filename
 
     fs.readFile(fullpath, 'utf8', (error, data) => {
-      if (error)
-        return this.error(res, filename)
+      if (error) return this.error(res, filename)
 
       res.writeHead(200, config.server.mimeTypes[extension])
       res.end(data)

@@ -34,7 +34,7 @@ let Config = {
   logger: {
     console: !PROD,
     debug: !PROD,
-    path: PROD ? '/export/logs/logway' : BASE + '/server/log'
+    path: PROD ? '/var/log/logway' : BASE + '/server/log'
   },
 
   service: {

@@ -46,11 +46,11 @@ class Logstash {
     var size = storage.length
     var output = ''
 
-    if (size === 0)
-      return
+    if (size === 0) return
 
-    if (size > options.maxLogsPerInterval)
+    if (size > options.maxLogsPerInterval) {
       return log.error('Skipping this batch! Too big! Size: ' + size + ' lines')
+    }
 
     if (sending === true) {
       storage = []

@@ -17,8 +17,7 @@ class Service {
   }
 
   send () {
-    if (Object.keys(metrics).length === 0 && weblogs.length === 0)
-      return
+    if (Object.keys(metrics).length === 0 && weblogs.length === 0) return
 
     process.send({ metrics: metrics, weblogs: weblogs }, () => {
       metrics = {}
@@ -48,8 +47,7 @@ class Service {
       lines.shift()
     }
 
-    if (lines.length < 1)
-      return log.info('Invalid content')
+    if (lines.length < 1) return log.info('Invalid content')
 
     // do not accept more then maxLinesPerPost
     var llen = lines.length > config.service.maxLinesPerPost
@@ -73,15 +71,11 @@ class Service {
       var fqn = prefix + parts[1]
       var value = Number(parts[2])
 
-      if (!this.validate(prefix, parts, fqn, value))
-        continue
+      if (!this.validate(prefix, parts, fqn, value)) continue
 
-      if (type === 'c')
-        this.count(value, fqn)
-      else if (type === 's')
-        this.stats(value, fqn)
-      else
-        log.warn('Invalid type ' + type)
+      if (type === 'c') this.count(value, fqn)
+      else if (type === 's') this.stats(value, fqn)
+      else log.warn('Invalid type ' + type)
     }
   }
 
@@ -97,10 +91,9 @@ class Service {
 
   stats (value, fqn) {
     log.debug('Adding stats: ' + fqn + ' ' + value)
-    if (metrics[fqn])
-      metrics[fqn].push(value)
-    else
-      metrics[fqn] = [value]
+
+    if (metrics[fqn]) metrics[fqn].push(value)
+    else metrics[fqn] = [value]
   }
 
   write (content) {

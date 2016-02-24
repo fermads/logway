@@ -54,11 +54,11 @@ class Graphite {
     var mts = ~~(Date.now() / 1000) // bitwise double NOT transform float to int
     var size = Object.keys(storage).length
 
-    if (size === 0)
-      return
+    if (size === 0) return
 
-    if (size > options.maxMetricsPerInterval)
+    if (size > options.maxMetricsPerInterval) {
       return log.error('Skipping this batch! Too big! Size: ' + size + ' lines')
+    }
 
     if (sending === true) {
       storage = {}
@@ -96,12 +96,9 @@ class Graphite {
       let value = metrics[fqn]
       let type = typeof value === 'number' ? 'c' : 's'
 
-      if (type === 'c')
-        this.count(value, fqn)
-      else if (type === 's')
-        this.stats(value, fqn)
-      else
-        log.warn('Invalid metric type ' + type)
+      if (type === 'c') this.count(value, fqn)
+      else if (type === 's') this.stats(value, fqn)
+      else log.warn('Invalid metric type ' + type)
     }
   }
 
@@ -110,11 +107,11 @@ class Graphite {
   }
 
   stats (arr, fqn) {
-    if (!storage[fqn])
-      storage[fqn] = []
+    if (!storage[fqn]) storage[fqn] = []
 
-    for (let i = 0; i < arr.length; i++)
+    for (let i = 0; i < arr.length; i++) {
       stats.insert(arr[i], storage[fqn])
+    }
   }
 }
 
