@@ -66,3 +66,15 @@
 
   w.Logway.ABTest = ABTest
 })(window)
+
+/*
+ let t = new ABTest('recomendacoes')
+
+t.setup({
+  'flow': 33,
+  'recomendados': 33,
+  'f+r': 33
+}, bla)
+
+t.select('gostey')
+*/

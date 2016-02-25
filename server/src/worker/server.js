@@ -10,6 +10,15 @@ let Logger = require('../../lib/logger')
 
 let log, service, id, healthOk = true, keys
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Credentials': false,
+  // 'Access-Control-Max-Age': '86400',
+  'Access-Control-Allow-Headers':
+    'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
+}
+
 class Server {
 
   constructor () {
@@ -67,7 +76,7 @@ class Server {
       this.unavailable(res)
     }
     else if (req.method === 'OPTIONS') {
-      this.cors(res)
+      this.options(res)
     }
     else if (path === '/v1') {
       this.service(req, res)
@@ -104,32 +113,22 @@ class Server {
   }
 
   error (res, path) {
-    res.writeHead(404)
+    res.writeHead(404, headers)
     res.end('404 not found: ' + path)
     log.debug('404 not found: ' + path)
   }
 
   unavailable (res) {
-    res.writeHead(503)
+    res.writeHead(503, headers)
     res.end('service unavailable')
   }
 
   ok (res) {
-    res.writeHead(200)
+    res.writeHead(200, headers)
     res.end('ok')
   }
 
-  cors (res) {
-    var headers = {
-      'Access-Control-Allow-Origin': '*',
-      // 'Access-Control-Allow-Methods': 'POST, GET, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Credentials': false,
-      // 'Access-Control-Max-Age': '86400',
-      'Access-Control-Allow-Headers':
-        'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
-    }
-
+  options (res) {
     res.writeHead(200, headers)
     res.end()
   }

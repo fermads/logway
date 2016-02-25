@@ -30,7 +30,7 @@
     if (!t) return log('Performance API not supported by this browser')
 
     if (Math.random() * 100 > percent) {
-      return log('This user not in the ' + percent + '%')
+      return log('This user is not in the ' + percent + '%')
     }
 
     w.addEventListener('load', function () {

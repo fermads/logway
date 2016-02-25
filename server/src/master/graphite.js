@@ -89,6 +89,9 @@ class Graphite {
         log.debug('Metrics sent to Graphite server:' + util.fmlm(output))
       })
     }
+    else {
+      sending = false
+    }
   }
 
   add (metrics) {
