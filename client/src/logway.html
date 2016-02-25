@@ -12,6 +12,7 @@
 <script src="/logway.perf.js"></script>
 <script src="/logway.weblog.js"></script>
 <script src="/logway.timer.js"></script>
+<script src="/logway.abtest.js"></script>
 <script>
 /* global Logway */
 
@@ -20,6 +21,7 @@ function runTests() {
   testPut();
   testStats();
   testLog();
+  testABTest();
   stressAdd();
   stressPut();
   stressStats();
@@ -77,6 +79,19 @@ function stressStats() {
 
 function error() {
   console.write(bla);
+}
+
+function testABTest() {
+  var t = new Logway.ABTest('abtest.botao')
+  t.add('rosa', 25)
+  t.add('verde', 50, function() {
+    console.log('aeeeeeeeeeeee')
+  })
+  t.add('preto', 25)
+  t.start()
+  setTimeout(function() {
+    t.end()
+  }, 2000)
 }
 
 </script>
