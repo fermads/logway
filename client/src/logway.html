@@ -14,17 +14,29 @@
 <script src="/logway.timer.js"></script>
 <script src="/logway.abtest.js"></script>
 <script>
-/* global Logway */
 
-function runTests() {
-  testAdd();
-  testPut();
-  testStats();
-  testLog();
-  testABTest();
-  stressAdd();
-  stressPut();
-  stressStats();
+function runBasicTests() {
+  testAdd()
+  testPut()
+  testStats()
+}
+
+function runWeblogTests() {
+  testWeblog()
+}
+
+function runABTests() {
+  testABTest()
+}
+
+function runTimerTests() {
+  testTimer()
+}
+
+function runStressTests() {
+  stressAdd()
+  stressPut()
+  stressStats()
 }
 
 function rand(i) {
@@ -78,25 +90,52 @@ function stressStats() {
 }
 
 function error() {
-  console.write(bla);
+  console.write(bla)
+}
+
+function testTimer() {
+  var t1 = new Logway.Timer('timer.twosecs')
+  var t2 = new Logway.Timer('timer.fivesecs')
+  t1.start()
+  t2.start()
+  setTimeout(t1.end.bind(t1), 2000)
+  setTimeout(t2.end.bind(t2), 5000)
 }
 
 function testABTest() {
-  var t = new Logway.ABTest('abtest.botao')
-  t.add('rosa', 25)
-  t.add('verde', 50, function() {
-    console.log('aeeeeeeeeeeee')
+  var t = new Logway.ABTest('abtest.recomendacoes')
+
+  // window.t = t
+
+  t.setup({
+    'flow': 33.3,
+    'reco': 33.3,
+    'flow_reco': 33.4
+  }, function(result) {
+    console.log('ABTest callback', t.result, result)
   })
-  t.add('preto', 25)
-  t.start()
-  setTimeout(function() {
-    t.end()
-  }, 2000)
+
+  t.select('gostei')
+}
+
+function testWeblog() {
+  var log = new Logway.Weblog()
+  log.info('test info 1')
+  log.warn('test warn 2')
+  log.debug('test debug 3')
+  log.trace('test trace 4')
+  log.error('test error 5')
+  log.fatal('test fatal 6')
 }
 
 </script>
-
-<a href="javascript:runTests()">Run some tests</a>
-<a href="javascript:error()">Force error</a>
+<ul>
+  <li><a href="javascript:runBasicTests()">Basic test</a></li>
+  <li><a href="javascript:runStressTests()">Stress test</a></li>
+  <li><a href="javascript:runABTests()">AB test</a></li>
+  <li><a href="javascript:runTimerTests()">Timer test</a></li>
+  <li><a href="javascript:runWeblogTests()">Logger test</a></li>
+  <li><a href="javascript:error()">Force error</a></li>
+</ul>
 </body>
 </html>

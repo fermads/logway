@@ -1,10 +1,10 @@
 ;(function (w) {
-  var timer = null
   var log = w.Logway.log
 
   function Timer (metric, startNow) {
     if (!metric) return log('Metric name is required')
 
+    this.timer = null
     this.metric = metric
     this.end = end
     this.start = start
@@ -15,15 +15,15 @@
   }
 
   function start () {
-    timer = Date.now()
-    return timer
+    this.timer = Date.now()
+    return this.timer
   }
 
   function end () {
-    if (!timer) return log('Timer not started')
+    if (!this.timer) return log('Timer not started')
 
-    var result = Date.now() - timer
-    timer = null
+    var result = Date.now() - this.timer
+    this.timer = null
 
     w.Logway.stats(this.metric, result)
 

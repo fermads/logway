@@ -8,26 +8,20 @@
     this.result = null
     this.tests = {}
 
-    this.add = add
-    this.end = end
-    this.start = start
+    this.setup = setup
+    this.select = select
     this.lotery = lotery
+    this.restore = restore
+    this.clear = clear
 
     return this
-  }
-
-  function add (version, percent, callback) {
-    this.tests[version] = {
-      percent: percent,
-      callback: callback
-    }
   }
 
   function lotery () {
     var number = parseInt(Math.random() * 100, 10), value = 0
 
     for (var version in this.tests) {
-      value += this.tests[version].percent
+      value += this.tests[version]
 
       if (number <= value) {
         return version
@@ -37,22 +31,33 @@
     return 'none'
   }
 
-  function start () {
-    this.result = localStorage.getItem('logway-' + this.metric)
+  function clear () {
+    localStorage.removeItem('logway-' + this.metric)
+  }
 
-    if (!this.result) {
-      this.result = this.lotery()
-      localStorage.setItem('logway-' + this.metric, this.result)
+  function restore () {
+    var storage = localStorage.getItem('logway-' + this.metric)
+
+    if (!storage) {
+      storage = this.lotery()
+      localStorage.setItem('logway-' + this.metric, storage)
       log('Returning user for test "' + this.metric + '" with version "'
-        + this.result + '"')
+        + storage + '"')
     }
     else {
       log('New user for test "' + this.metric + '" with version "'
-        + this.result + '"')
+        + storage + '"')
     }
 
-    if (this.tests[this.result].callback) {
-      this.tests[this.result].callback()
+    return storage
+  }
+
+  function setup (tests, callback) {
+    this.tests = tests
+    this.result = this.restore()
+
+    if (callback) {
+      callback(this.result)
     }
 
     w.Logway.count(this.metric + '.' + this.result + '.start')
@@ -60,21 +65,9 @@
     return this.result
   }
 
-  function end () {
-    w.Logway.count(this.metric + '.' + this.result + '.end')
+  function select (option) {
+    w.Logway.count(this.metric + '.' + this.result + '.' + option)
   }
 
   w.Logway.ABTest = ABTest
 })(window)
-
-/*
- let t = new ABTest('recomendacoes')
-
-t.setup({
-  'flow': 33,
-  'recomendados': 33,
-  'f+r': 33
-}, bla)
-
-t.select('gostey')
-*/

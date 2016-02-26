@@ -71,17 +71,17 @@
   }
 
   function flush () {
-    var output = ''
+    var output = '', mar = []
     var size = Object.keys(metrics).length
 
     if (logs.length + size > maxSize) return log('Too many lines')
-
     if (prefix && size > 0) output = 'p ' + prefix + '\n'
 
     for (var fqn in metrics) {
-      output += metrics[fqn].type + ' ' + fqn + ' ' + metrics[fqn].value + '\n'
+      mar.push(metrics[fqn].type + ' ' + fqn + ' ' + metrics[fqn].value)
     }
 
+    output += mar.join('\n')
     metrics = {}
     output += logs.join('\n')
     logs = []

@@ -84,5 +84,6 @@
     return M.join(' ')
   }
 
-  return init()
+  w.Logway.Weblog = init
+
 })(window)
