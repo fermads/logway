@@ -115,7 +115,10 @@ function testABTest() {
     console.log('ABTest callback', t.result, result)
   })
 
-  t.select('gostei')
+  setTimeout(function() {
+    t.select('gostei')
+  }, 4000)
+
 }
 
 function testWeblog() {

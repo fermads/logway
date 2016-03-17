@@ -11,6 +11,7 @@ class Master {
 
   constructor () {
     if (cluster.isMaster) {
+      process.title = 'node logway master'
       log = new Logger('master', config.logger)
       graphite = new Graphite()
       logstash = new Logstash()

@@ -1,13 +1,12 @@
 {
   "name": "logway",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Client and server application for sending metrics and logs from the client (browser) to the server (Graphite / Logstash)",
   "main": "index.js",
   "bin": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server-mock": "node4 --use_strict server/test/server-mock.js",
-    "start4": "node4 --use_strict .",
+    "server-mock": "node --use_strict server/test/server-mock.js",
     "start": "node --use_strict .",
     "build": "uglifyjs client/src/logway.js client/src/logway.perf.js client/src/logway.weblog.js client/src/logway.timer.js -o client/build/logway.min.js"
   },

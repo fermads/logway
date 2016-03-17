@@ -50,9 +50,9 @@ class Graphite {
   }
 
   send () {
-    var output = ''
-    var mts = ~~(Date.now() / 1000) // bitwise double NOT transform float to int
-    var size = Object.keys(storage).length
+    let output = ''
+    let mts = ~~(Date.now() / 1000) // bitwise double NOT transform float to int
+    let size = Object.keys(storage).length
 
     if (size === 0) return
 
@@ -67,14 +67,14 @@ class Graphite {
 
     sending = true
 
-    for (var metric in storage) {
+    for (let metric in storage) {
       if (typeof storage[metric] === 'number') {
         output += metric + '.' + options.hostname
           + ' ' + storage[metric] + ' ' + mts + '\n'
       }
       else {
         let result = stats.calculate(storage[metric])
-        for (var stat in result) {
+        for (let stat in result) {
           output += metric + '.' + stat + '.' + options.hostname
             + ' ' + result[stat] + ' ' + mts + '\n'
         }

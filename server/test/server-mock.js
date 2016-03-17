@@ -1,4 +1,5 @@
 let net = require('net')
+let config = require('../src/config')
 
 class ServerMock {
 
@@ -22,9 +23,10 @@ class ServerMock {
       })
     })
 
-    server.listen({port: 9000}, () => {
-      console.log('[logstash-mock] Server running on port 9000',
-        server.address())
+    server.listen({port: config.logstash.port}, () => {
+      console.log('[logstash-mock] Server running on port',
+      config.logstash.port,
+      server.address())
     })
   }
 
@@ -43,8 +45,9 @@ class ServerMock {
       })
     })
 
-    server.listen({port: 231}, () => {
-      console.log('[graphite-mock] Server running on port 231',
+    server.listen({port: config.graphite.port}, () => {
+      console.log('[graphite-mock] Server running on port',
+        config.graphite.port,
         server.address())
     })
   }

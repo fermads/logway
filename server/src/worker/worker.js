@@ -31,8 +31,8 @@ class Worker {
   }
 
   parse (content) {
-    var prefix = ''
-    var lines = content.split('\n')
+    let prefix = ''
+    let lines = content.split('\n')
 
     if (lines.length === 0) return
 
@@ -41,13 +41,13 @@ class Worker {
       lines.shift()
     }
 
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
       if (lines[i].indexOf(' ') === -1) continue
 
-      var parts = lines[i].split(' ')
-      var fqn = prefix + parts[0]
-      var value = Number(parts[1])
-      var type = parts[2]
+      let parts = lines[i].split(' ')
+      let fqn = prefix + parts[0]
+      let value = Number(parts[1])
+      let type = parts[2]
 
       if (!this.validate(fqn, value)) continue
 

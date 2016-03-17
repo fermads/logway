@@ -20,6 +20,7 @@ let Config = {
     useHttp2: false,
     httpPort: 80,
     httpsPort: 443,
+    ethif: PROD ? 'pubhost' : '',
     httpsKeys: {
       key: BASE + '/server/etc/key/logway-key.pem',
       cert: BASE + '/server/etc/key/logway-cert.pem'
@@ -55,8 +56,8 @@ let Config = {
   graphite: {
     enabled: true,
     type: 'tcp', // TO-DO: implement
-    host: '127.0.0.1',
-    port: 231,
+    host: PROD ? 'graphite-syslog.portal.intranet' : '127.0.0.1',
+    port: 514,
     reconnectInterval: PROD ? 60 * SEC : 5 * SEC,
     flushInterval: PROD ? 60 * SEC : 10 * SEC,
     maxMetricsPerInterval: 1000000

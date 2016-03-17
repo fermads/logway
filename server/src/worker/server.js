@@ -48,13 +48,13 @@ class Server {
     http.createServer((req, res) => {
       path = url.parse(req.url).pathname
       this.router(req, res, path)
-    }).listen(config.server.httpPort)
+    }).listen(config.server.httpPort, config.server.ethif)
 
     if (keys) {
       https.createServer(keys, (req, res) => {
         path = url.parse(req.url).pathname
         this.router(req, res, path)
-      }).listen(config.server.httpsPort)
+      }).listen(config.server.httpsPort, config.server.ethif)
     }
   }
 

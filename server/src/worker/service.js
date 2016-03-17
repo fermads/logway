@@ -39,8 +39,8 @@ class Service {
   }
 
   parse (content) {
-    var prefix = ''
-    var lines = content.split('\n')
+    let prefix = ''
+    let lines = content.split('\n')
 
     if (lines[0].indexOf('p ') === 0) {
       prefix = lines[0].split(' ')[1]
@@ -50,26 +50,26 @@ class Service {
     if (lines.length < 1) return log.info('Invalid content')
 
     // do not accept more then maxLinesPerPost
-    var llen = lines.length > config.service.maxLinesPerPost
+    let llen = lines.length > config.service.maxLinesPerPost
       ? config.service.maxLinesPerPost
       : lines.length
 
-    for (var i = 0; i < llen; i++) {
+    for (let i = 0; i < llen; i++) {
       if (lines[i].indexOf(' ') !== 1) { // second char must be a space
         log.debug('Invalid metric format:', lines[i])
         continue
       }
 
-      var parts = lines[i].split(' ')
-      var type = parts[0]
+      let parts = lines[i].split(' ')
+      let type = parts[0]
 
       if (type === 'l') { // web log only need 'l ' to work
         this.weblog(lines[i].substr(2)) // remove the type (first 2 chars)
         continue
       }
 
-      var fqn = prefix + parts[1]
-      var value = Number(parts[2])
+      let fqn = prefix + parts[1]
+      let value = Number(parts[2])
 
       if (!this.validate(prefix, parts, fqn, value)) continue
 

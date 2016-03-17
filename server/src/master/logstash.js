@@ -43,8 +43,8 @@ class Logstash {
   }
 
   send () {
-    var size = storage.length
-    var output = ''
+    let size = storage.length
+    let output = ''
 
     if (size === 0) return
 
@@ -74,7 +74,7 @@ class Logstash {
   }
 
   add (lines) {
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
       storage.push(lines[i])
     }
   }
