@@ -3,12 +3,9 @@
   var log = w.Logway.log
   var percent = 10
 
-  init()
-
   function calculate () {
     var perfs = {
-      // to understand this, see:
-      // http://www.w3.org/TR/navigation-timing/timing-overview.png
+      // explanation: http://www.w3.org/TR/navigation-timing/timing-overview.png
       'redirect': t.redirectEnd - t.redirectStart,
       'fetchfromcache': t.domainLookupStart - t.fetchStart,
       'domainlookup': t.domainLookupEnd - t.domainLookupStart,
@@ -26,27 +23,41 @@
     return perfs
   }
 
-  function init () {
-    if (!t) return log('Performance API not supported by this browser')
+  function run (p) {
+    if (!t) {
+      return log('Performance API not supported by this browser')
+    }
+
+    percent = p || percent
 
     if (Math.random() * 100 > percent) {
       return log('This user is not in the ' + percent + '%')
     }
 
-    w.addEventListener('load', function () {
-      setTimeout(send, 0)
-    })
+    // executed before onload
+    if (document.readyState === 'complete') {
+      send()
+    }
+    else {
+      w.addEventListener('load', function () {
+        // sometimes performance.timing is not ready. setTimeout fix it.
+        setTimeout(send, 0)
+      })
+    }
   }
 
   function send () {
     var result = calculate()
 
-    if (result.pagefullload === 0) {
-      return log('Could not calculate performance.timing')
-    }
-
     for (var item in result) {
-      w.Logway.stats('perf.' + item, result[item])
+      // fix browsers that show crazy numbers on performance timing
+      if (result[item] > 0 && result[item] < 300000) { // 5 mins
+        w.Logway.stats('perf.' + item, result[item])
+      }
     }
+  }
+
+  w.Logway.Perf = {
+    run: run
   }
 })(window)

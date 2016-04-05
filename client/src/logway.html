@@ -21,6 +21,10 @@ function runBasicTests() {
   testStats()
 }
 
+function runPerfTests() {
+  testPerf()
+}
+
 function runWeblogTests() {
   testWeblog()
 }
@@ -42,6 +46,10 @@ function runStressTests() {
 function rand(i) {
   i = i || 100;
   return Math.round(Math.random() * i);
+}
+
+function testPerf() {
+  Logway.Perf.run(100)
 }
 
 function testAdd() {
@@ -138,6 +146,7 @@ function testWeblog() {
   <li><a href="javascript:runABTests()">AB test</a></li>
   <li><a href="javascript:runTimerTests()">Timer test</a></li>
   <li><a href="javascript:runWeblogTests()">Logger test</a></li>
+  <li><a href="javascript:runPerfTests()">Perf test</a></li>
   <li><a href="javascript:error()">Force error</a></li>
 </ul>
 </body>
